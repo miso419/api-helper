@@ -4,7 +4,7 @@ Helpers that are commonly used in microservices.
 
 ## Setup
 ```
-npm install @tiqk/api-helper --save
+npm install @builtlabs/api-helper --save
 ```
 
 ## Table of contents
@@ -33,8 +33,8 @@ For single table, you can simply call `createUserLogForCreate`, `createUserLogFo
 * newObject: (object) New object after changes
 
 ```js
-import { AuditLog } from '@tiqk/api-helper';
-const auditLog = new AuditLog('https://audit-service-dev.tiqk.io');
+import { AuditLog } from '@builtlabs/api-helper';
+const auditLog = new AuditLog('https://audit-service-dev.built.com.au');
 
 function createSubdomain(requestId, userId, organisationId, subdomain) {
     return userManager.getUser(userId)
@@ -58,8 +58,8 @@ Create a Redis connection. It must be called in server.js to initialise cacheHel
 
 ```js
 import config from 'config';
-import Server from '@tiqk/microservice-base';
-import { cacheHelper } from '@tiqk/api-helper';
+import Server from '@builtlabs/microservice-base';
+import { cacheHelper } from '@builtlabs/api-helper';
 import routes from './routes';
 
 cacheHelper.setup(config.redis.endpoint);
@@ -84,7 +84,7 @@ Set cache with a key and a JSON object. Use third parameter `expiryIn` to set ex
 If `expiryIn` is not provided, no expiry time will be set.
 
 ```js
-import { responseHelper, cacheHelper } from '@tiqk/api-helper';
+import { responseHelper, cacheHelper } from '@builtlabs/api-helper';
 import db from '../models';
 import constants from '../helpers/constants';
 
@@ -112,7 +112,7 @@ function getAllActivities() {
 Get a cached object by key.
 
 ```js
-import { responseHelper, cacheHelper } from '@tiqk/api-helper';
+import { responseHelper, cacheHelper } from '@builtlabs/api-helper';
 import db from '../models';
 import constants from '../helpers/constants';
 
@@ -152,7 +152,7 @@ Creates single error object with a error code, error message, and error field.
 Note that it returns a string to be used as the message parameter in an error class.
 
 ```js
-import { responseHelper } from '@tiqk/api-helper';
+import { responseHelper } from '@builtlabs/api-helper';
 
 function validateEmail(email) {
     if (!email) {
@@ -167,7 +167,7 @@ Creates an error list.
 Note that it returns a string to be used as the message parameter in an error class.
 
 ```js
-import { responseHelper } from '@tiqk/api-helper';
+import { responseHelper } from '@builtlabs/api-helper';
 
 function validateEmail(email) {
     const errors = [
@@ -193,13 +193,13 @@ Creates response data object that has no error.
 Note that it returns a JSON object.
 
 ```js
-import { responseHelper } from '@tiqk/api-helper';
+import { responseHelper } from '@builtlabs/api-helper';
 
 function getData() {
     const testData = {
         id: 1,
         name: 'John',
-        company: 'TIQK'
+        company: 'BuiltLabs'
     };
     
     return responseHelper.createData(testData);
