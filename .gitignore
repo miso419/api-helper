@@ -73,8 +73,8 @@ typings/
 # Serverless directories
 .serverless
 
-.package-lock.json
-.yarn.lock
+package-lock.json
+yarn.lock
 .idea
 .vscode
 .DS_STORE
