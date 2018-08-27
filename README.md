@@ -34,7 +34,7 @@ For single table, you can simply call `createUserLogForCreate`, `createUserLogFo
 
 ```js
 import { AuditLog } from '@builtlabs/api-helper';
-const auditLog = new AuditLog('https://audit-service-dev.built.com.au');
+const auditLog = new AuditLog('https://audit-service-dev.built.com.au', 'project name');
 
 function createSubdomain(requestId, userId, organisationId, subdomain) {
     return userManager.getUser(userId)
