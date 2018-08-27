@@ -1,6 +1,6 @@
 import AuditLog from '../../src/auditLog';
 
-const auditLog = new AuditLog('http://localhost:5555');
+const auditLog = new AuditLog('http://localhost:5555', 'test project');
 
 describe('AuditLog', () => {
 
@@ -62,6 +62,7 @@ describe('AuditLog', () => {
 
         it('should return a log object when all parameters are properly set', () => {
             const result = auditLog.getUserLogObj('user', 123, 'update', { test: 'test' }, { test: 'test2' });
+            expect(result.projectName).to.equal('test project');
             expect(result.tableName).to.equal('user');
             expect(result.recordId).to.equal(123);
             expect(result.actionType).to.equal('update');

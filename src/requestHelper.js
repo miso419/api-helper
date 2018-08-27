@@ -1,37 +1,41 @@
-import _ from 'lodash';
 import request from 'request';
 
-function call(method, url, requestId, jsonBody) {
+function call(method, url, jsonBody, headers, isJsonResult = false, formData) {
     return new Promise((resolve, reject) => {
         request({
             method,
             url,
-            headers: { requestId },
-            json: jsonBody
+            headers,
+            json: jsonBody,
+            formData
         }, (error, response, body) => {
             if (error) {
                 return reject(error);
             }
-
-            if (response.statusCode === 200) {
-                return resolve(body);
-            }
-
-            const errorMessage = _.isString(body) ? body : JSON.stringify(body);
-            return reject(new SyntaxError(errorMessage));
+            return resolve(isJsonResult ? body : JSON.parse(body));
         });
     });
 }
 
-function post(url, requestId, jsonBody) {
-    return call('POST', url, requestId, jsonBody);
+function post(url, jsonBody, headers, isJsonResult = false, formData) {
+    return call('POST', url, jsonBody, headers, isJsonResult, formData);
 }
 
-function get(url, requestId) {
-    return call('GET', url, requestId);
+function put(url, jsonBody, headers, isJsonResult = false) {
+    return call('PUT', url, jsonBody, headers, isJsonResult);
+}
+
+function del(url, jsonBody, headers, isJsonResult = false) {
+    return call('DELETE', url, jsonBody, headers, isJsonResult);
+}
+
+function get(url, headers, isJsonResult = false) {
+    return call('GET', url, null, headers, isJsonResult);
 }
 
 export default {
     post,
+    put,
+    del,
     get
 };

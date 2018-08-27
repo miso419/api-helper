@@ -2,12 +2,16 @@ import deep from 'deep-diff';
 import requestHelper from './requestHelper';
 
 export default class {
-    constructor(auditServiceEndpoint) {
+    constructor(auditServiceEndpoint, projectName) {
         if (!auditServiceEndpoint) {
             throw new SyntaxError('The auditServiceEndpoint parameter is required.');
         }
+        if (!projectName) {
+            throw new SyntaxError('The projectName parameter is required.');
+        }
 
         this.auditServiceEndpoint = auditServiceEndpoint;
+        this.projectName = projectName;
         this.diff = deep.diff;
         /*eslint-disable */
         this.actionTypes = {
@@ -46,6 +50,7 @@ export default class {
         }
 
         return {
+            projectName: this.projectName,
             tableName,
             recordId,
             actionType,
@@ -56,8 +61,8 @@ export default class {
     callAuditServiceToCreate(requestId, log) {
         return requestHelper.post(
             this.auditServiceEndpoint + '/v1/user-audit/create',
-            requestId,
-            log);
+            log,
+            { requestId });
     }
 
     createUserLogs(requestId, userId, ...objects) {
