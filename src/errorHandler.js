@@ -10,6 +10,7 @@ const builtErrorCodes = {
     ERROR_40101: '40101',
     ERROR_40301: '40301',
     ERROR_40302: '40302',
+    ERROR_40303: '40303',
     ERROR_40901: '40901',
     ERROR_42901: '42901'
 };
@@ -24,8 +25,9 @@ const builtErrorList = [
     { status: 400, code: builtErrorCodes.ERROR_40005, message: 'Other error', moreInfo: null },
     { status: 400, code: builtErrorCodes.ERROR_40099, message: 'Unknown error', moreInfo: null },
     { status: 401, code: builtErrorCodes.ERROR_40101, message: 'Authentication failed', moreInfo: null },
-    { status: 403, code: builtErrorCodes.ERROR_40301, message: 'Authorisation failed', moreInfo: null },
+    { status: 403, code: builtErrorCodes.ERROR_40301, message: 'Authorisation failed - Specific action', moreInfo: null },
     { status: 403, code: builtErrorCodes.ERROR_40302, message: 'Invalid subscription', moreInfo: null },
+    { status: 403, code: builtErrorCodes.ERROR_40303, message: 'Authorisation failed - No roles', moreInfo: null },
     { status: 409, code: builtErrorCodes.ERROR_40901, message: 'Conflict', moreInfo: null },
     { status: 429, code: builtErrorCodes.ERROR_42901, message: 'Request exeeded limit', moreInfo: null }
 ];
