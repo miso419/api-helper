@@ -42,7 +42,6 @@ const addGenericAttributes = sourceAttrs => ({ ...sourceAttrs, origin });
 const publish = (jsonData, attributes) => {
     throwErrorIfFalse(topicPath, `'topicPath' has not been set up. Call the setup function first`);
     throwErrorIfFalse(jsonData, `'jsonData' is required`);
-    throwErrorIfFalse(jsonData, `'jsonData' is required`);
     validateAttributes(attributes);
 
     const dataBuffer = Buffer.from(JSON.stringify(jsonData));
