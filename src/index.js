@@ -1,4 +1,4 @@
-import AuditLog from './auditLog';
+import AuditLog from './AuditLog';
 import cacheHelper from './cacheHelper';
 import requestHelper from './requestHelper';
 import responseHelper from './responseHelper';
