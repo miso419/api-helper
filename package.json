@@ -1,13 +1,13 @@
 {
   "name": "@builtlabs/api-helper",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Helpers that are commonly used in microservices",
   "main": "./lib/index.js",
   "license": "MIT",
   "scripts": {
     "build": "node node_modules/babel/bin/babel.js src --out-dir lib",
     "lint": "node ./node_modules/eslint/bin/eslint.js --ext .js, src/",
-    "prepublish": "npm run lint && npm run test && npm run build",
+    "prepublishOnly": "npm run lint && npm run test && npm run build",
     "test": "node node_modules/mocha/bin/mocha --reporter dot --ui bdd --compilers js:babel/register tests/setup.js tests/ --recursive"
   },
   "pre-commit": [
