@@ -3,8 +3,8 @@ const { PubSub } = require('@google-cloud/pubsub');
 const pubsub = new PubSub();
 let origin = null;
 let topicPath = null;
-let subscriptionPath = null;
-let subscription = null;
+let projectName = null;
+let subscriptions = [];
 
 const ATTR_TYPE = {
     POST: 'POST',
@@ -19,13 +19,13 @@ const throwErrorIfFalse = (condition, errMsg) => {
     }
 };
 
-const setup = ({ appName, gcpProjectName, topicName, subscriptionName }) => {
+const setup = ({ appName, gcpProjectName, topicName }) => {
     throwErrorIfFalse(appName, `'appName' is required`);
     throwErrorIfFalse(appName, `'gcpProjectName' is required`);
 
     origin = appName;
     topicPath = topicName && `projects/${gcpProjectName}/topics/${topicName}`;
-    subscriptionPath = subscriptionName && `projects/${gcpProjectName}/subscriptions/${subscriptionName}`;
+    projectName = gcpProjectName;
 };
 
 const validateAttributes = attrs => {
@@ -55,17 +55,18 @@ const messageHandler = (message, callback) => {
     callback(JSON.parse(data), attributes);
 };
 
-const subscribe = (successCallback, errorCallback) => {
-    throwErrorIfFalse(!subscription, `This funciton should be called only once`);
-    throwErrorIfFalse(subscriptionPath, `'subscriptionPath' has not been set up. Call the setup function first.`);
+const subscribe = (subscriptionName, successCallback, errorCallback) => {
+    throwErrorIfFalse(subscriptionName, `'subscriptionName' is required`);
     throwErrorIfFalse(successCallback, `'successCallback' is required`);
     throwErrorIfFalse(errorCallback, `'errorCallback' is required`);
 
-    subscription = pubsub.subscription(subscriptionPath);
+    const path = subscriptionName && `projects/${projectName}/subscriptions/${subscriptionName}`;
+    const subscription = pubsub.subscription(path);
     subscription.on('message', msg => messageHandler(msg, successCallback));
     subscription.on('error', errorCallback);
+    subscriptions.push(subscription);
+    console.info(`PubSub: ${subscriptionName} has been subscribed`);
 };
-
 
 // For generic topics ---------------------------------------
 
