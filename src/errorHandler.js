@@ -6,6 +6,7 @@ const builtErrorCodes = {
     ERROR_40003: '40003',
     ERROR_40004: '40004',
     ERROR_40005: '40005',
+    ERROR_40006: '40006',   // Joi validation error
     ERROR_40099: '40099',
     ERROR_40101: '40101',
     ERROR_40301: '40301',
@@ -15,7 +16,11 @@ const builtErrorCodes = {
     ERROR_42901: '42901'
 };
 
-const detailsRequiredErrors = [ builtErrorCodes.ERROR_40005, builtErrorCodes.ERROR_40901 ];
+const detailsRequiredErrors = [
+    builtErrorCodes.ERROR_40005,
+    builtErrorCodes.ERROR_40006,
+    builtErrorCodes.ERROR_40901
+];
 
 const builtErrorList = [
     { status: 400, code: builtErrorCodes.ERROR_40001, message: `${fieldNamePlaceholder} is required`, moreInfo: null },
@@ -23,6 +28,7 @@ const builtErrorList = [
     { status: 400, code: builtErrorCodes.ERROR_40003, message: `${fieldNamePlaceholder} is invalid`, moreInfo: null },
     { status: 400, code: builtErrorCodes.ERROR_40004, message: 'Malformed request.', moreInfo: null },
     { status: 400, code: builtErrorCodes.ERROR_40005, message: 'Other error', moreInfo: null },
+    { status: 400, code: builtErrorCodes.ERROR_40006, message: `${fieldNamePlaceholder} is invalid`, moreInfo: null },
     { status: 400, code: builtErrorCodes.ERROR_40099, message: 'Unknown error', moreInfo: null },
     { status: 401, code: builtErrorCodes.ERROR_40101, message: 'Authentication failed', moreInfo: null },
     { status: 403, code: builtErrorCodes.ERROR_40301, message: 'Authorisation failed - Specific action', moreInfo: null },
