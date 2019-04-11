@@ -24,9 +24,19 @@ function throwCustomErrorIfFalseCondition(condition, errorCode, fieldName, detai
     }
 }
 
+function throwIfJoiHasErrors(joiError, objectName) {
+    if (!joiError) {
+        return null;
+    }
+
+    const details = joiError.details.map(e => e.message).join('\r\n');
+    throw new BuiltApiError({ code: builtErrorCodes.ERROR_40006, fieldName: objectName, details });
+}
+
 export default {
     throwErrorIfFieldNotProvided,
     throwErrorIfNoObjectExists,
     throwErrorIfObjectAleadyExists,
-    throwCustomErrorIfFalseCondition
+    throwCustomErrorIfFalseCondition,
+    throwIfJoiHasErrors
 };
