@@ -1,8 +1,17 @@
 import responseHelper from '../../src/responseHelper';
 
 describe('responseHelper', () => {
-    describe('createData', () => {
+    describe('set', () => {
         it('should return hasError=false and a object that represents data', () => {
+            const requestId = 'sessiontoken';
+            const userToken = 'usertoken';
+            const testReq = {
+                header: {
+                    ['X-Session-Token']: requestId,
+                    userToken
+                }
+            };
+
             const testData = {
                 testField1: 'Test field 1',
                 testField2: 'Test field 2',
@@ -12,9 +21,9 @@ describe('responseHelper', () => {
                 }
             };
 
-            const result = responseHelper.createData(testData);
-
-            expect(result.hasError).to.be.false;
+            const result = responseHelper.set(testReq, testData);
+            expect(result.requestId).to.equal(requestId);
+            expect(result.userToken).to.equal(userToken);
             expect(result.data.testField1).to.equal(testData.testField1);
             expect(result.data.testField3.testField3_2).to.equal(testData.testField3.testField3_2);
         });
