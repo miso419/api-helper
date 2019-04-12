@@ -6,9 +6,10 @@ describe('responseHelper', () => {
             const requestId = 'sessiontoken';
             const userToken = 'usertoken';
             const testReq = {
-                header: {
-                    ['X-Session-Token']: requestId,
-                    userToken
+                get: (key) => {
+                    if (key === 'X-Session-Token') return requestId;
+                    if (key === 'userToken') return userToken;
+                    return null;
                 }
             };
 

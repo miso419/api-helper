@@ -1,12 +1,12 @@
 function set(req, result) {
     const requestId =
-        req.header['X-Session-Token'] ||
-        req.header.requestId ||
+        req.get('X-Session-Token') ||
+        req.get('requestId') ||
         req.body.requestId ||
         req.query.requestId;
 
     const userToken =
-        req.header.userToken ||
+        req.get('userToken') ||
         req.body.userToken ||
         req.query.userToken;
 
