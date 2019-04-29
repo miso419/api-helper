@@ -13,6 +13,8 @@ const ATTR_TYPE = {
     GET: 'GET'
 };
 
+const EMAILTEMPLATE_TOPIC = 'emailNotification';
+
 const throwErrorIfFalse = (condition, errMsg) => {
     if (!condition) {
         throw new SyntaxError(errMsg);
@@ -70,13 +72,34 @@ const subscribe = (subscriptionName, successCallback, errorCallback) => {
 
 // For generic topics ---------------------------------------
 
-const publishEmail = (data, attribues) => {
-    console.log(`data: ${data}, attributes: ${attribues}`);
-    throw new Error('Not implemented yet');
+const publishEmail = ({ gcpProjectName, requestId, from, to, cc, bcc, organisationId, emailTemplateId, cloudFileId, subject, values }) => {
+    throwErrorIfFalse(projectName || gcpProjectName, `If 'setup' function has not been invoked, 'gcpProjectName' is required`);
+    throwErrorIfFalse(requestId, `'requestId' is required`);
+    throwErrorIfFalse(from, `'from' is required`);
+    throwErrorIfFalse(to, `'to' is required`);
+    throwErrorIfFalse(organisationId, `'organisationId' is required`);
+    throwErrorIfFalse(emailTemplateId || cloudFileId, `'emailTemplateId' or 'cloudFileId' is required`);
+    throwErrorIfFalse(subject, `'subject' is required`);
+
+    const data = {
+        cloudFileId,
+        emailTemplateId,
+        values,
+        subject,
+        from,
+        to,
+        cc,
+        bcc
+    };
+
+    const path = `projects/${projectName || gcpProjectName}/topics/${EMAILTEMPLATE_TOPIC}`;
+    const dataBuffer = Buffer.from(JSON.stringify(data));
+    const newAttrs = addGenericAttributes({ requestId });
+    return pubsub.topic(path).publish(dataBuffer, newAttrs);
 };
 
-const publishAuditLog = (data, attribues) => {
-    console.log(`data: ${data}, attributes: ${attribues}`);
+const publishAuditLog = (data, attributes) => {
+    console.log(`data: ${data}, attributes: ${attributes}`);
     throw new Error('Not implemented yet');
 };
 

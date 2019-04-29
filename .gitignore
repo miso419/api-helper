@@ -70,6 +70,9 @@ typings/
 # vuepress build output
 .vuepress/dist
 
+# npm pack output
+.tgz
+
 # Serverless directories
 .serverless
 
