@@ -72,7 +72,8 @@ const subscribe = (subscriptionName, successCallback, errorCallback) => {
 
 // For generic topics ---------------------------------------
 
-const publishEmail = ({ requestId, from, to, cc, bcc, organisationId, emailTemplateId, cloudFileId, subject, values }) => {
+const publishEmail = ({ gcpProjectName, requestId, from, to, cc, bcc, organisationId, emailTemplateId, cloudFileId, subject, values }) => {
+    throwErrorIfFalse(projectName || gcpProjectName, `If 'setup' function has not been invoked, 'gcpProjectName' is required`);
     throwErrorIfFalse(requestId, `'requestId' is required`);
     throwErrorIfFalse(from, `'from' is required`);
     throwErrorIfFalse(to, `'to' is required`);
@@ -91,7 +92,7 @@ const publishEmail = ({ requestId, from, to, cc, bcc, organisationId, emailTempl
         bcc
     };
 
-    const path = `projects/${projectName}/topics/${EMAILTEMPLATE_TOPIC}`;
+    const path = `projects/${projectName || gcpProjectName}/topics/${EMAILTEMPLATE_TOPIC}`;
     const dataBuffer = Buffer.from(JSON.stringify(data));
     const newAttrs = addGenericAttributes({ requestId });
     return pubsub.topic(path).publish(dataBuffer, newAttrs);
