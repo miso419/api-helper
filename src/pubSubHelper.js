@@ -92,9 +92,15 @@ const publishEmail = ({ gcpProjectName, requestId, from, to, cc, bcc, organisati
         bcc
     };
 
+    const attr = {
+        requestId,
+        type: ATTR_TYPE.POST,
+        key: 'send.an.email'
+    };
+
     const path = `projects/${projectName || gcpProjectName}/topics/${EMAILTEMPLATE_TOPIC}`;
     const dataBuffer = Buffer.from(JSON.stringify(data));
-    const newAttrs = addGenericAttributes({ requestId });
+    const newAttrs = addGenericAttributes(attr);
     return pubsub.topic(path).publish(dataBuffer, newAttrs);
 };
 
