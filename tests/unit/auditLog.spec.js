@@ -1,4 +1,5 @@
-import AuditLog from '../../src/auditLog';
+const { expect } = require('chai');
+const AuditLog = require('../../src/auditLog');
 
 const auditLog = new AuditLog('http://localhost:5555', 'test project');
 
@@ -10,7 +11,7 @@ describe('AuditLog', () => {
             try {
                 auditLog.getUserLogObj();
                 throw new Error('should not reach here!');
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(SyntaxError);
             }
         });
@@ -19,7 +20,7 @@ describe('AuditLog', () => {
             try {
                 auditLog.getUserLogObj('user');
                 throw new Error('should not reach here!');
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(SyntaxError);
             }
         });
@@ -28,7 +29,7 @@ describe('AuditLog', () => {
             try {
                 auditLog.getUserLogObj('user', 123);
                 throw new Error('should not reach here!');
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(SyntaxError);
             }
         });
@@ -37,7 +38,7 @@ describe('AuditLog', () => {
             try {
                 auditLog.getUserLogObj('user', 123, 'what');
                 throw new Error('should not reach here!');
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(SyntaxError);
             }
         });
@@ -46,7 +47,7 @@ describe('AuditLog', () => {
             try {
                 auditLog.getUserLogObj('user', 123, 'craete', {});
                 throw new Error('should not reach here!');
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(SyntaxError);
             }
         });
@@ -55,7 +56,7 @@ describe('AuditLog', () => {
             try {
                 auditLog.getUserLogObj('user', 123, 'update');
                 throw new Error('should not reach here!');
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(SyntaxError);
             }
         });
@@ -69,5 +70,4 @@ describe('AuditLog', () => {
             expect(result.fields).to.lengthOf(1);
         });
     });
-
 });

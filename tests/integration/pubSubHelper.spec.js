@@ -1,3 +1,4 @@
+const { expect } = require('chai');
 const pubSubHelper = require('../../src/pubSubHelper');
 const KEYS = require('../../src/pubSubKeys');
 
@@ -44,7 +45,7 @@ xdescribe('pubSubHelper', () => {
                     hasDoneCalled = true;
                     done();
                 }
-            }, () => {});
+            }, () => { });
         });
     });
 });

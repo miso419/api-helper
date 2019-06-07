@@ -1,17 +1,15 @@
 {
   "name": "@builtlabs/api-helper",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Helpers that are commonly used in microservices",
-  "main": "./lib/index.js",
+  "main": "./src/index.js",
   "license": "MIT",
   "scripts": {
-    "build": "node node_modules/babel/bin/babel.js src --out-dir lib",
     "lint": "node ./node_modules/eslint/bin/eslint.js --ext .js, src/",
-    "prepublishOnly": "npm run lint && npm run test && npm run build",
-    "test": "node node_modules/mocha/bin/mocha --reporter dot --ui bdd --compilers js:babel/register tests/setup.js tests/ --recursive"
+    "test": "nyc ./node_modules/.bin/mocha tests/ --recursive",
+    "prepublishOnly": "npm run test"
   },
   "pre-commit": [
-    "lint",
     "test"
   ],
   "repository": {
@@ -19,23 +17,24 @@
     "url": "git+https://bitbucket.org:builtlabsrepo/api-helper.git"
   },
   "dependencies": {
-    "@builtlabs/logger": "^0.1.7",
-    "@google-cloud/pubsub": "^0.28.1",
-    "deep-diff": "^0.3.4",
-    "lodash": "^4.17.4",
-    "redis": "^2.7.1",
-    "request": "^2.81.0"
+    "@builtlabs/logger": "^0.1.9",
+    "@google-cloud/pubsub": "^0.29.1",
+    "deep-diff": "^1.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.11",
+    "ramda": "^0.26.1",
+    "redis": "^2.8.0",
+    "request": "^2.88.0"
   },
   "devDependencies": {
-    "babel": "^5.6.23",
-    "babel-eslint": "^5.0.0-beta9",
-    "babel-istanbul": "^0.2.9",
-    "chai": "^3.0.0",
-    "eslint": "^0.23.0",
-    "eslint-config-airbnb": "0.0.8",
-    "mocha": "^2.2.5",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.3",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
     "pre-commit": "^1.2.2",
-    "proxyquire": "^1.7.4",
-    "superagent": "^1.2.0"
+    "proxyquire": "^2.1.0",
+    "superagent": "^5.0.6"
   }
 }

@@ -1,4 +1,5 @@
-import responseHelper from '../../src/responseHelper';
+const { expect } = require('chai');
+const responseHelper = require('../../src/responseHelper');
 
 describe('responseHelper', () => {
     describe('set', () => {

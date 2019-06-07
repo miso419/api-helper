@@ -85,7 +85,7 @@ class BuiltApiError extends Error {
     }
 }
 
-export default {
+module.exports = {
     BuiltApiError,
     builtErrorCodes,
     detailsRequiredErrors

@@ -1,7 +1,7 @@
-import deep from 'deep-diff';
-import requestHelper from './requestHelper';
+const deep = require('deep-diff');
+const requestHelper = require('./requestHelper');
 
-export default class {
+module.exports = class {
     constructor(auditServiceEndpoint, projectName) {
         if (!auditServiceEndpoint) {
             throw new SyntaxError('The auditServiceEndpoint parameter is required.');
@@ -13,19 +13,18 @@ export default class {
         this.auditServiceEndpoint = auditServiceEndpoint;
         this.projectName = projectName;
         this.diff = deep.diff;
-        /*eslint-disable */
         this.actionTypes = {
             create: 'create',
             update: 'update',
             delete: 'delete',
-            read: 'read'
+            read: 'read',
         };
-        /*eslint-enable */
+
         this.actionTypesAll = [
             this.actionTypes.create,
             this.actionTypes.update,
             this.actionTypes.delete,
-            this.actionTypes.read
+            this.actionTypes.read,
         ];
     }
 
@@ -54,7 +53,7 @@ export default class {
             tableName,
             recordId,
             actionType,
-            fields: this.diff(oldFields, newFields)
+            fields: this.diff(oldFields, newFields),
         };
     }
 
@@ -69,14 +68,14 @@ export default class {
         const requestBody = {
             userId,
             log: objects.map(obj => this.getUserLogObj(obj.tableName, obj.recordId, obj.actionType, obj.old, obj.new))
-        };
+        }
         return this.callAuditServiceToCreate(requestId, requestBody);
     }
 
     createUserLogForCreate(requestId, userId, tableName, recordId, newObject) {
         const requestBody = {
             userId,
-            log: [ this.getUserLogObj(tableName, recordId, this.actionTypes.create, {}, newObject) ]
+            log: [this.getUserLogObj(tableName, recordId, this.actionTypes.create, {}, newObject)],
         };
         return this.callAuditServiceToCreate(requestId, requestBody);
     }
@@ -84,7 +83,7 @@ export default class {
     createUserLogForUpdate(requestId, userId, tableName, recordId, oldObject, newObject) {
         const requestBody = {
             userId,
-            log: [ this.getUserLogObj(tableName, recordId, this.actionTypes.update, oldObject, newObject) ]
+            log: [this.getUserLogObj(tableName, recordId, this.actionTypes.update, oldObject, newObject)]
         };
         return this.callAuditServiceToCreate(requestId, requestBody);
     }
@@ -92,8 +91,8 @@ export default class {
     createUserLogForDelete(requestId, userId, tableName, recordId) {
         const requestBody = {
             userId,
-            log: [ this.getUserLogObj(tableName, recordId, this.actionTypes.delete, {}, {}) ]
+            log: [this.getUserLogObj(tableName, recordId, this.actionTypes.delete, {}, {})]
         };
         return this.callAuditServiceToCreate(requestId, requestBody);
     }
-}
+};

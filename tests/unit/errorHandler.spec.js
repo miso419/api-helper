@@ -1,4 +1,5 @@
-import { BuiltApiError, builtErrorCodes, detailsRequiredErrors } from '../../src/errorHandler';
+const { expect } = require('chai');
+const { BuiltApiError, builtErrorCodes, detailsRequiredErrors } = require('../../src/errorHandler');
 
 describe('BuiltApiError', () => {
 
@@ -58,5 +59,4 @@ describe('BuiltApiError', () => {
             expect(details).to.equal(testDetails);
         }
     });
-
 });

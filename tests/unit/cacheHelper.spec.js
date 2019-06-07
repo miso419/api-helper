@@ -1,5 +1,6 @@
-import cacheHelper from '../../src/cacheHelper';
-import { BuiltApiError, builtErrorCodes } from '../../src/errorHandler';
+const { expect } = require('chai');
+const cacheHelper = require('../../src/cacheHelper');
+const { BuiltApiError, builtErrorCodes } = require('../../src/errorHandler');
 
 function assertSyntaxErrorObj(e, expectedErrorCode = builtErrorCodes.ERROR_40003) {
     expect(e).to.be.an.instanceof(BuiltApiError);
@@ -26,13 +27,13 @@ describe('cacheHelper', () => {
 
     describe('getExpirySeconds', () => {
 
-        const invalidCases = [ '100', '224v', '12hh', 'qwm' ];
+        const invalidCases = ['100', '224v', '12hh', 'qwm'];
         invalidCases.forEach(expiryIn => {
             it(`should throw SyntaxError when expiryIn "${expiryIn}" is invalid format.`, () => {
                 try {
                     cacheHelper.getExpirySeconds(expiryIn);
                     throw new Error('should not reach here!');
-                } catch(e) {
+                } catch (e) {
                     assertSyntaxErrorObj(e);
                 }
             });
@@ -56,5 +57,4 @@ describe('cacheHelper', () => {
             expect(result).to.equal(40 * 60);
         });
     });
-
 });

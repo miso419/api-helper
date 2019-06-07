@@ -1,5 +1,6 @@
-import validationHelper from '../../src/validationHelper';
-import { BuiltApiError, builtErrorCodes } from '../../src/errorHandler';
+const { expect } = require('chai');
+const validationHelper = require('../../src/validationHelper');
+const { BuiltApiError, builtErrorCodes } = require('../../src/errorHandler');
 
 describe('validationHelper', () => {
     describe('throwErrorIfFieldNotProvided', () => {
@@ -8,7 +9,7 @@ describe('validationHelper', () => {
             const fieldName = 'test';
             try {
                 validationHelper.throwErrorIfFieldNotProvided(test, fieldName);
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(BuiltApiError);
                 const { status, code, message, field } = e.getError();
                 expect(e.name).to.equal('BuiltApiError');
@@ -24,7 +25,7 @@ describe('validationHelper', () => {
             const fieldName = 'test';
             try {
                 validationHelper.throwErrorIfFieldNotProvided(test, fieldName);
-            } catch(e) {
+            } catch (e) {
                 expect.fail('Must not throw an error');
             }
         });
@@ -36,7 +37,7 @@ describe('validationHelper', () => {
             const testObjectName = 'test';
             try {
                 validationHelper.throwErrorIfNoObjectExists(testObject, testObjectName);
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(BuiltApiError);
                 const { status, code, message } = e.getError();
                 expect(e.name).to.equal('BuiltApiError');
@@ -51,7 +52,7 @@ describe('validationHelper', () => {
             const testObjectName = 'test';
             try {
                 validationHelper.throwErrorIfNoObjectExists(testObject, testObjectName);
-            } catch(e) {
+            } catch (e) {
                 expect.fail('Must not throw an error');
             }
         });
@@ -63,7 +64,7 @@ describe('validationHelper', () => {
             const testObjectName = 'test';
             try {
                 validationHelper.throwErrorIfObjectAleadyExists(testObject, testObjectName);
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(BuiltApiError);
                 const { status, code, message, details } = e.getError();
                 expect(e.name).to.equal('BuiltApiError');
@@ -79,7 +80,7 @@ describe('validationHelper', () => {
             const testObjectName = 'test';
             try {
                 validationHelper.throwErrorIfObjectAleadyExists(testObject, testObjectName);
-            } catch(e) {
+            } catch (e) {
                 expect.fail('Must not throw an error');
             }
         });
@@ -94,7 +95,7 @@ describe('validationHelper', () => {
             const testDetails = 'This is test';
             try {
                 validationHelper.throwCustomErrorIfFalseCondition(testCondition, testErrorCode, testFieldName, testDetails);
-            } catch(e) {
+            } catch (e) {
                 expect(e).to.be.an.instanceof(BuiltApiError);
                 const { status, code, message, details } = e.getError();
                 expect(e.name).to.equal('BuiltApiError');
@@ -112,7 +113,7 @@ describe('validationHelper', () => {
             const testDetails = 'This is test';
             try {
                 validationHelper.throwCustomErrorIfFalseCondition(testCondition, testErrorCode, testFieldName, testDetails);
-            } catch(e) {
+            } catch (e) {
                 expect.fail('Must not throw an error');
             }
         });

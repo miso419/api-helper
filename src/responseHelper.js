@@ -17,6 +17,6 @@ function set(req, result) {
     };
 }
 
-export default {
+module.exports = {
     set
 };
