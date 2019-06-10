@@ -1,4 +1,4 @@
-import { BuiltApiError, builtErrorCodes } from './errorHandler';
+const { BuiltApiError, builtErrorCodes } = require('./errorHandler');
 
 function throwErrorIfFieldNotProvided(field, fieldName) {
     if (field === null || field === undefined) {
@@ -33,7 +33,7 @@ function throwIfJoiHasErrors(joiError, objectName) {
     throw new BuiltApiError({ code: builtErrorCodes.ERROR_40006, fieldName: objectName, details });
 }
 
-export default {
+module.exports = {
     throwErrorIfFieldNotProvided,
     throwErrorIfNoObjectExists,
     throwErrorIfObjectAleadyExists,

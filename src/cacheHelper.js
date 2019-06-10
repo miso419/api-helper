@@ -1,7 +1,7 @@
-import redis from 'redis';
-import logger from '@builtlabs/logger';
-import { builtErrorCodes } from './errorHandler';
-import validationHelper from './validationHelper';
+const redis = require('redis');
+const logger = require('@builtlabs/logger');
+const { builtErrorCodes } = require('./errorHandler');
+const validationHelper = require('./validationHelper');
 
 let client = null;
 
@@ -52,7 +52,7 @@ function getExpirySeconds(expiryIn) {
     }
 
     const type = expiryIn.slice(-1);
-    const avaiableTypes = [ 'd', 'h', 'm' ];
+    const avaiableTypes = ['d', 'h', 'm'];
     validationHelper.throwCustomErrorIfFalseCondition(avaiableTypes.includes(type), builtErrorCodes.ERROR_40003, 'expiryIn', 'The last character of expiryIn must be "d", "h", or "m"');
 
     const value = expiryIn.slice(0, -1);
@@ -185,7 +185,7 @@ function deleteByKeyword(keyword) {
         .then(keys => Promise.all(keys.map(k => deleteWithPromise(k))));
 }
 
-export default {
+module.exports = {
     setup,
     getRedisClient,
     set,

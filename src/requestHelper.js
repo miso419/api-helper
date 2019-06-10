@@ -1,4 +1,4 @@
-import request from 'request';
+const request = require('request');
 
 function call(method, url, jsonBody, headers, isJsonResult = false, formData) {
     return new Promise((resolve, reject) => {
@@ -33,7 +33,7 @@ function get(url, headers, isJsonResult = false) {
     return call('GET', url, null, headers, isJsonResult);
 }
 
-export default {
+module.exports = {
     post,
     put,
     del,

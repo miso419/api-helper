@@ -1,13 +1,15 @@
-import AuditLog from './AuditLog';
-import cacheHelper from './cacheHelper';
-import requestHelper from './requestHelper';
-import responseHelper from './responseHelper';
-import validationHelper from './validationHelper';
-import pubSubHelper from './pubSubHelper';
-import pubSubKeys from './pubSubKeys';
-import { BuiltApiError, builtErrorCodes } from './errorHandler';
+const AuditLog = require('./AuditLog');
+const cacheHelper = require('./cacheHelper');
+const requestHelper = require('./requestHelper');
+const responseHelper = require('./responseHelper');
+const validationHelper = require('./validationHelper');
+const pubSubHelper = require('./pubSubHelper');
+const pubSubKeys = require('./pubSubKeys');
+const { BuiltApiError, builtErrorCodes } = require('./errorHandler');
+const jwtHelper = require('./jwtHelper');
+const authorisationHelper = require('./authorisationHelper');
 
-export default {
+module.exports = {
     AuditLog,
     cacheHelper,
     requestHelper,
@@ -16,5 +18,7 @@ export default {
     pubSubHelper,
     pubSubKeys,
     BuiltApiError,
-    builtErrorCodes
+    builtErrorCodes,
+    jwtHelper,
+    authorisationHelper
 };

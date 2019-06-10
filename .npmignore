@@ -9,6 +9,9 @@ yarn.lock
 .DS_STORE
 logs
 *.log
+lib/
+.nyc_out/
+tests/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
