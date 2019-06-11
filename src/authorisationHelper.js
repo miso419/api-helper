@@ -21,6 +21,14 @@ const setup = ({ appName, userSecretKey, internalServiceSecretKey }) => {
     config.internalServiceSecretKey = internalServiceSecretKey;
 };
 
+const validateSetup = () => {
+    throwCustomErrorIfFalseCondition(
+        config && config.appName,
+        builtErrorCodes.ERROR_40005,
+        null,
+        `'setup' function has to be called prior to this action`);
+}
+
 const getAppId = (userInfo) => {
     const app = R.pipe(
         R.pathOr([], ['registry', 'applications']),
@@ -59,6 +67,7 @@ const getRoles = (req) => {
 };
 
 const hasRole = (roleData, roleName, entity = null, entityId = null) => {
+    validateSetup();
     return roleData && roleData.some(i => i.name === roleName
         && i.entity === entity
         && i.entityId === entityId);
@@ -70,6 +79,7 @@ const validateAuthResult = (authorised, next) => {
 };
 
 const authorise = (authFunc) => {
+    validateSetup();
     // eslint-disable-next-line consistent-return
     return async (req, res, next) => {
         let result = null;
