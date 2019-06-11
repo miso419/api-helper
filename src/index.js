@@ -7,6 +7,7 @@ const pubSubHelper = require('./pubSubHelper');
 const pubSubKeys = require('./pubSubKeys');
 const { BuiltApiError, builtErrorCodes } = require('./errorHandler');
 const jwtHelper = require('./jwtHelper');
+const testHelper = require('./testHelper');
 const authorisationHelper = require('./authorisationHelper');
 
 module.exports = {
@@ -20,5 +21,6 @@ module.exports = {
     BuiltApiError,
     builtErrorCodes,
     jwtHelper,
+    testHelper,
     authorisationHelper
 };
