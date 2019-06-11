@@ -1,6 +1,6 @@
 {
   "name": "@builtlabs/api-helper",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "Helpers that are commonly used in microservices",
   "main": "./src/index.js",
   "license": "MIT",
@@ -18,7 +18,7 @@
     "url": "git+https://bitbucket.org:builtlabsrepo/api-helper.git"
   },
   "dependencies": {
-    "@builtlabs/logger": "^1.0.0",
+    "@builtlabs/logger": "^1.0.1",
     "@google-cloud/pubsub": "^0.29.1",
     "chai": "^4.2.0",
     "deep-diff": "^1.0.2",
