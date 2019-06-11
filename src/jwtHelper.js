@@ -22,5 +22,5 @@ const verifyToken = (token, key, rejectIfTokenNotProvided = true) => {
 
 module.exports = {
     createToken,
-    verifyToken
+    verifyToken,
 };

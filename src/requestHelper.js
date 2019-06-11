@@ -7,7 +7,7 @@ function call(method, url, jsonBody, headers, isJsonResult = false, formData) {
             url,
             headers,
             json: jsonBody,
-            formData
+            formData,
         }, (error, response, body) => {
             if (error) {
                 return reject(error);
@@ -37,5 +37,5 @@ module.exports = {
     post,
     put,
     del,
-    get
+    get,
 };
