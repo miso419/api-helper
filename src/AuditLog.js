@@ -59,16 +59,19 @@ module.exports = class {
 
     callAuditServiceToCreate(requestId, log) {
         return requestHelper.post(
-            this.auditServiceEndpoint + '/v1/user-audit/create',
+            `${this.auditServiceEndpoint}/v1/user-audit/create`,
             log,
-            { requestId });
+            { requestId },
+        );
     }
 
     createUserLogs(requestId, userId, ...objects) {
         const requestBody = {
             userId,
-            log: objects.map(obj => this.getUserLogObj(obj.tableName, obj.recordId, obj.actionType, obj.old, obj.new))
-        }
+            log: objects.map(obj => this.getUserLogObj(
+                obj.tableName, obj.recordId, obj.actionType, obj.old, obj.new,
+            )),
+        };
         return this.callAuditServiceToCreate(requestId, requestBody);
     }
 
@@ -83,7 +86,9 @@ module.exports = class {
     createUserLogForUpdate(requestId, userId, tableName, recordId, oldObject, newObject) {
         const requestBody = {
             userId,
-            log: [this.getUserLogObj(tableName, recordId, this.actionTypes.update, oldObject, newObject)]
+            log: [this.getUserLogObj(
+                tableName, recordId, this.actionTypes.update, oldObject, newObject,
+            )],
         };
         return this.callAuditServiceToCreate(requestId, requestBody);
     }
@@ -91,7 +96,7 @@ module.exports = class {
     createUserLogForDelete(requestId, userId, tableName, recordId) {
         const requestBody = {
             userId,
-            log: [this.getUserLogObj(tableName, recordId, this.actionTypes.delete, {}, {})]
+            log: [this.getUserLogObj(tableName, recordId, this.actionTypes.delete, {}, {})],
         };
         return this.callAuditServiceToCreate(requestId, requestBody);
     }

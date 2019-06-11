@@ -22,5 +22,5 @@ module.exports = {
     builtErrorCodes,
     jwtHelper,
     testHelper,
-    authorisationHelper
+    authorisationHelper,
 };

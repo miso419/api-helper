@@ -8,7 +8,7 @@ const INTERNAL_SERVICE = 'internal_service';
 const config = {
     appName: null,
     userSecretKey: null,
-    internalServiceSecretKey: null
+    internalServiceSecretKey: null,
 };
 
 const setup = ({ appName, userSecretKey, internalServiceSecretKey }) => {
@@ -26,8 +26,9 @@ const validateSetup = () => {
         config && config.appName,
         builtErrorCodes.ERROR_40005,
         null,
-        `'setup' function has to be called prior to this action`);
-}
+        '\'setup\' function has to be called prior to this action',
+    );
+};
 
 const getAppId = (userInfo) => {
     const app = R.pipe(
@@ -56,7 +57,7 @@ const getUserRoles = async (token) => {
     return {
         id: R.path(['registry', 'id'])(userInfo),
         email: R.path(['registry', 'email'])(userInfo),
-        roles
+        roles,
     };
 };
 
@@ -109,5 +110,5 @@ module.exports = {
     setup,
     hasRole,
     authorise,
-    generateInternalServiceToken
+    generateInternalServiceToken,
 };

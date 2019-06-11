@@ -7,9 +7,10 @@
   "scripts": {
     "lint": "node ./node_modules/eslint/bin/eslint.js --ext .js, src/",
     "test": "nyc ./node_modules/.bin/mocha tests/ --recursive",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run lint && npm run test"
   },
   "pre-commit": [
+    "lint",
     "test"
   ],
   "repository": {
@@ -19,6 +20,7 @@
   "dependencies": {
     "@builtlabs/logger": "^0.1.9",
     "@google-cloud/pubsub": "^0.29.1",
+    "chai": "^4.2.0",
     "deep-diff": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
@@ -27,7 +29,6 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.17.3",

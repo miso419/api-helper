@@ -4,13 +4,13 @@ const pubsub = new PubSub();
 let origin = null;
 let topicPath = null;
 let projectName = null;
-let subscriptions = [];
+const subscriptions = [];
 
 const ATTR_TYPE = {
     POST: 'POST',
     PUT: 'PUT',
     DELETE: 'DELETE',
-    GET: 'GET'
+    GET: 'GET',
 };
 
 const EMAILTEMPLATE_TOPIC = 'emailNotification';
@@ -22,28 +22,29 @@ const throwErrorIfFalse = (condition, errMsg) => {
 };
 
 const setup = ({ appName, gcpProjectName, topicName }) => {
-    throwErrorIfFalse(appName, `'appName' is required`);
-    throwErrorIfFalse(appName, `'gcpProjectName' is required`);
+    throwErrorIfFalse(appName, '\'appName\' is required');
+    throwErrorIfFalse(appName, '\'gcpProjectName\' is required');
 
     origin = appName;
     topicPath = topicName && `projects/${gcpProjectName}/topics/${topicName}`;
     projectName = gcpProjectName;
 };
 
-const validateAttributes = attrs => {
-    throwErrorIfFalse(attrs, `'attributes' must not be empty`);
+const validateAttributes = (attrs) => {
+    throwErrorIfFalse(attrs, '\'attributes\' must not be empty');
     throwErrorIfFalse(
         attrs.type && ATTR_TYPE[attrs.type],
-        `'type' in 'attributes' is required and must be one of 'ATTR_TYPE'`);
-    throwErrorIfFalse(attrs.requestId, `'requestId' in 'attributes' is required`);
-    throwErrorIfFalse(attrs.key, `'key' in 'attributes' is required`);
+        '\'type\' in \'attributes\' is required and must be one of \'ATTR_TYPE\'',
+    );
+    throwErrorIfFalse(attrs.requestId, '\'requestId\' in \'attributes\' is required');
+    throwErrorIfFalse(attrs.key, '\'key\' in \'attributes\' is required');
 };
 
 const addGenericAttributes = sourceAttrs => ({ ...sourceAttrs, origin });
 
 const publish = (jsonData, attributes) => {
-    throwErrorIfFalse(topicPath, `'topicPath' has not been set up. Call the setup function first`);
-    throwErrorIfFalse(jsonData, `'jsonData' is required`);
+    throwErrorIfFalse(topicPath, '\'topicPath\' has not been set up. Call the setup function first');
+    throwErrorIfFalse(jsonData, '\'jsonData\' is required');
     validateAttributes(attributes);
 
     const dataBuffer = Buffer.from(JSON.stringify(jsonData));
@@ -58,9 +59,9 @@ const messageHandler = (message, callback) => {
 };
 
 const subscribe = (subscriptionName, successCallback, errorCallback) => {
-    throwErrorIfFalse(subscriptionName, `'subscriptionName' is required`);
-    throwErrorIfFalse(successCallback, `'successCallback' is required`);
-    throwErrorIfFalse(errorCallback, `'errorCallback' is required`);
+    throwErrorIfFalse(subscriptionName, '\'subscriptionName\' is required');
+    throwErrorIfFalse(successCallback, '\'successCallback\' is required');
+    throwErrorIfFalse(errorCallback, '\'errorCallback\' is required');
 
     const path = subscriptionName && `projects/${projectName}/subscriptions/${subscriptionName}`;
     const subscription = pubsub.subscription(path);
@@ -72,14 +73,26 @@ const subscribe = (subscriptionName, successCallback, errorCallback) => {
 
 // For generic topics ---------------------------------------
 
-const publishEmail = ({ gcpProjectName, requestId, from, to, cc, bcc, organisationId, emailTemplateId, cloudFileId, subject, values }) => {
-    throwErrorIfFalse(projectName || gcpProjectName, `If 'setup' function has not been invoked, 'gcpProjectName' is required`);
-    throwErrorIfFalse(requestId, `'requestId' is required`);
-    throwErrorIfFalse(from, `'from' is required`);
-    throwErrorIfFalse(to, `'to' is required`);
-    throwErrorIfFalse(organisationId, `'organisationId' is required`);
-    throwErrorIfFalse(emailTemplateId || cloudFileId, `'emailTemplateId' or 'cloudFileId' is required`);
-    throwErrorIfFalse(subject, `'subject' is required`);
+const publishEmail = ({
+    gcpProjectName,
+    requestId,
+    from,
+    to,
+    cc,
+    bcc,
+    organisationId,
+    emailTemplateId,
+    cloudFileId,
+    subject,
+    values,
+}) => {
+    throwErrorIfFalse(projectName || gcpProjectName, 'If \'setup\' function has not been invoked, \'gcpProjectName\' is required');
+    throwErrorIfFalse(requestId, '\'requestId\' is required');
+    throwErrorIfFalse(from, '\'from\' is required');
+    throwErrorIfFalse(to, '\'to\' is required');
+    throwErrorIfFalse(organisationId, '\'organisationId\' is required');
+    throwErrorIfFalse(emailTemplateId || cloudFileId, '\'emailTemplateId\' or \'cloudFileId\' is required');
+    throwErrorIfFalse(subject, '\'subject\' is required');
 
     const data = {
         cloudFileId,
@@ -89,13 +102,13 @@ const publishEmail = ({ gcpProjectName, requestId, from, to, cc, bcc, organisati
         from,
         to,
         cc,
-        bcc
+        bcc,
     };
 
     const attr = {
         requestId,
         type: ATTR_TYPE.POST,
-        key: 'send.an.email'
+        key: 'send.an.email',
     };
 
     const path = `projects/${projectName || gcpProjectName}/topics/${EMAILTEMPLATE_TOPIC}`;
@@ -115,5 +128,5 @@ module.exports = {
     publish,
     subscribe,
     publishEmail,
-    publishAuditLog
+    publishAuditLog,
 };
