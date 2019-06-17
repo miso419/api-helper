@@ -55,7 +55,7 @@ const getUserRoles = async (token) => {
     )(userInfo);
 
     return {
-        id: R.path(['registry', 'id'])(userInfo),
+        id: R.path(['id'])(userInfo),
         email: R.path(['registry', 'email'])(userInfo),
         roles,
     };
