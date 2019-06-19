@@ -48,7 +48,7 @@ const getInternalServiceRole = async (token) => {
 
 const getUserRoles = async (token) => {
     const decoded = await verifyToken(token, config.userSecretKey);
-    const userInfo = decoded.userjwtstring || decoded;
+    const userInfo = decoded.userjwtstring ? JSON.parse(decoded.userjwtstring) : decoded;
 
     const roles = R.pipe(
         R.pathOr([], ['registry', 'roles']),
