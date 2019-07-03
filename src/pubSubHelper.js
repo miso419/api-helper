@@ -106,6 +106,7 @@ const publishEmail = ({
         to,
         cc,
         bcc,
+        domainName,
     };
 
     const attr = {
