@@ -14,6 +14,7 @@ const ATTR_TYPE = {
 };
 
 const EMAILTEMPLATE_TOPIC = 'emailNotification';
+const SMS_TOPIC = 'smsNotification';
 
 const throwErrorIfFalse = (condition, errMsg) => {
     if (!condition) {
@@ -85,6 +86,7 @@ const publishEmail = ({
     cloudFileId,
     subject,
     values,
+    domainName,
 }) => {
     throwErrorIfFalse(projectName || gcpProjectName, 'If \'setup\' function has not been invoked, \'gcpProjectName\' is required');
     throwErrorIfFalse(requestId, '\'requestId\' is required');
@@ -93,6 +95,7 @@ const publishEmail = ({
     throwErrorIfFalse(organisationId, '\'organisationId\' is required');
     throwErrorIfFalse(emailTemplateId || cloudFileId, '\'emailTemplateId\' or \'cloudFileId\' is required');
     throwErrorIfFalse(subject, '\'subject\' is required');
+    throwErrorIfFalse(domainName, '\'domainName\' is required');
 
     const data = {
         cloudFileId,
@@ -122,6 +125,38 @@ const publishAuditLog = (data, attributes) => {
     throw new Error('Not implemented yet');
 };
 
+const sendSMS = ({
+    gcpProjectName,
+    requestId,
+    from,
+    to,
+    message,
+    values,
+    cloudFileId,
+}) => {
+    throwErrorIfFalse(projectName || gcpProjectName, 'If \'setup\' function has not been invoked, \'gcpProjectName\' is required');
+    throwErrorIfFalse(from, '\'from\' is required');
+    throwErrorIfFalse(to, '\'to\' is required');
+    throwErrorIfFalse(message || cloudFileId, '\'message or cloudFileId \' is required');
+
+    const attr = {
+        requestId,
+        type: ATTR_TYPE.POST,
+        key: 'send.a.sms',
+    };
+    const data = {
+        From: from,
+        To: to,
+        Body: message,
+        values,
+        cloudFileId,
+    };
+    const path = `projects/${projectName || gcpProjectName}/topics/${SMS_TOPIC}`;
+    const dataBuffer = Buffer.from(JSON.stringify(data));
+    const newAttrs = addGenericAttributes(attr);
+    return pubsub.topic(path).publish(dataBuffer, newAttrs);
+};
+
 module.exports = {
     ATTR_TYPE,
     setup,
@@ -129,4 +164,5 @@ module.exports = {
     subscribe,
     publishEmail,
     publishAuditLog,
+    sendSMS,
 };
