@@ -131,11 +131,13 @@ const sendSMS = ({
     from,
     to,
     message,
+    values,
+    cloudFileId,
 }) => {
     throwErrorIfFalse(projectName || gcpProjectName, 'If \'setup\' function has not been invoked, \'gcpProjectName\' is required');
     throwErrorIfFalse(from, '\'from\' is required');
     throwErrorIfFalse(to, '\'to\' is required');
-    throwErrorIfFalse(message, '\'message\' is required');
+    throwErrorIfFalse(message || cloudFileId, '\'message or cloudFileId \' is required');
 
     const attr = {
         requestId,
@@ -146,6 +148,8 @@ const sendSMS = ({
         From: from,
         To: to,
         Body: message,
+        values,
+        cloudFileId,
     };
     const path = `projects/${projectName || gcpProjectName}/topics/${SMS_TOPIC}`;
     const dataBuffer = Buffer.from(JSON.stringify(data));
