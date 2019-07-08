@@ -87,6 +87,7 @@ const publishEmail = ({
     subject,
     values,
     domainName,
+    attachmentArray,
 }) => {
     throwErrorIfFalse(projectName || gcpProjectName, 'If \'setup\' function has not been invoked, \'gcpProjectName\' is required');
     throwErrorIfFalse(requestId, '\'requestId\' is required');
@@ -107,6 +108,7 @@ const publishEmail = ({
         cc,
         bcc,
         domainName,
+        attachmentArray,
     };
 
     const attr = {
