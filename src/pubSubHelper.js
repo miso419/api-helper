@@ -84,23 +84,25 @@ const publishEmail = ({
     organisationId,
     emailTemplateId,
     cloudFileId,
+    htmlString,
     subject,
     values,
     domainName,
     attachmentArray,
 }) => {
-    throwErrorIfFalse(projectName || gcpProjectName, 'If \'setup\' function has not been invoked, \'gcpProjectName\' is required');
-    throwErrorIfFalse(requestId, '\'requestId\' is required');
-    throwErrorIfFalse(from, '\'from\' is required');
-    throwErrorIfFalse(to, '\'to\' is required');
-    throwErrorIfFalse(organisationId, '\'organisationId\' is required');
-    throwErrorIfFalse(emailTemplateId || cloudFileId, '\'emailTemplateId\' or \'cloudFileId\' is required');
-    throwErrorIfFalse(subject, '\'subject\' is required');
-    throwErrorIfFalse(domainName, '\'domainName\' is required');
+    throwErrorIfFalse(projectName || gcpProjectName, "If 'setup' function has not been invoked, 'gcpProjectName' is required");
+    throwErrorIfFalse(requestId, "'requestId' is required");
+    throwErrorIfFalse(from, "'from' is required");
+    throwErrorIfFalse(to, "'to' is required");
+    throwErrorIfFalse(organisationId, "'organisationId' is required");
+    throwErrorIfFalse(emailTemplateId || cloudFileId || htmlString, "'emailTemplateId', 'cloudFileId', or 'htmlString' is required");
+    throwErrorIfFalse(subject, "'subject' is required");
+    throwErrorIfFalse(domainName, "'domainName' is required");
 
     const data = {
         cloudFileId,
         emailTemplateId,
+        htmlString,
         values,
         subject,
         from,
