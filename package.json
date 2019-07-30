@@ -1,6 +1,6 @@
 {
   "name": "@builtlabs/api-helper",
-  "version": "1.6.9",
+  "version": "1.6.10",
   "description": "Helpers that are commonly used in microservices",
   "main": "./src/index.js",
   "license": "MIT",
