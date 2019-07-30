@@ -18,7 +18,7 @@
     "url": "git+https://bitbucket.org:builtlabsrepo/api-helper.git"
   },
   "dependencies": {
-    "@builtlabs/logger": "^1.0.2",
+    "@builtlabs/logger": "^1.0.3",
     "@google-cloud/pubsub": "^0.30.1",
     "chai": "^4.2.0",
     "deep-diff": "^1.0.2",
