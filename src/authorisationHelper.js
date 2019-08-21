@@ -4,8 +4,6 @@ const { throwErrorIfFieldNotProvided, throwErrorIfNoObjectExists, throwCustomErr
 const requestHelper = require('./requestHelper');
 const { createToken, verifyToken } = require('./jwtHelper');
 
-const INTERNAL_SERVICE = 'internal_service';
-
 const config = {
     appName: null,
     userSecretKey: null,
@@ -49,7 +47,7 @@ const generateInternalServiceToken = () => createToken({}, config.internalServic
 
 const getInternalServiceRole = async (token) => {
     await verifyToken(token, config.internalServiceSecretKey);
-    return { roles: [{ name: INTERNAL_SERVICE, entity: null, entityId: null }] };
+    return { isInternalService: true };
 };
 
 const getUserRoles = async (token) => {
@@ -112,7 +110,9 @@ const hasRole = (roleData, roleName, entity = null, entityId = null) => {
         && i.entityId === entityId);
 };
 
-const hasRoleNew = (userOrgs, organisationId, roleName, entity = null, entityId = null) => {
+const hasRoleNew = ({
+    userOrgs, appId, organisationId, roleName, entity = null, entityId = null,
+}) => {
     validateSetup();
 
     const userOrg = userOrgs.find(i => i.organisationId === organisationId);
@@ -123,10 +123,13 @@ const hasRoleNew = (userOrgs, organisationId, roleName, entity = null, entityId 
         return entities && entities.include(targetEntityId);
     };
 
-    return userOrg.roles && userOrg.roles.some(i => i.name === roleName
+    return userOrg.roles && userOrg.roles.some(i => i.applicationId === appId
+        && i.name === roleName
         && i.entityType === entity
         && checkEntity(entityId, i.entities));
 };
+
+const hasInternalServiceRole = userInfo => userInfo && userInfo.isInternalService;
 
 const validateAuthResult = (authorised, next) => {
     throwCustomErrorIfFalseCondition(authorised, builtErrorCodes.ERROR_40301);
@@ -165,6 +168,7 @@ module.exports = {
     setup,
     hasRole,
     hasRoleNew,
+    hasInternalServiceRole,
     authorise,
     generateInternalServiceToken,
 };
