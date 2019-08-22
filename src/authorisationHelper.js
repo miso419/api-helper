@@ -81,8 +81,7 @@ const getConformIdUserInfo = async (token) => {
     const decoded = await verifyToken(token, config.userSecretKey);
     const userInfo = decoded.userjwtstring ? JSON.parse(decoded.userjwtstring) : decoded;
     throwErrorIfNoObjectExists(userInfo, 'user');
-    // TODO: Update the path as per Apigee change
-    const email = R.path(['registry', 'email'])(userInfo);
+    const email = userInfo.userEmailAddress;
     throwErrorIfNoObjectExists(email, 'user email');
 
     const endpoint = `${config.conformIdRootUrl}/users/${email}/roles`;
