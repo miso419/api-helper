@@ -1,4 +1,4 @@
-const R = require('ramda');
+
 const { builtErrorCodes } = require('./errorHandler');
 const { throwErrorIfFieldNotProvided, throwErrorIfNoObjectExists, throwCustomErrorIfFalseCondition } = require('./validationHelper');
 const requestHelper = require('./requestHelper');
@@ -34,47 +34,11 @@ const validateSetup = () => {
     );
 };
 
-const getAppId = (userInfo) => {
-    const app = R.pipe(
-        R.pathOr([], ['registry', 'applications']),
-        R.find(R.propEq('name', config.appName)),
-    )(userInfo);
-
-    return app && app.id;
-};
-
 const generateInternalServiceToken = () => createToken({}, config.internalServiceSecretKey, '1h');
 
 const getInternalServiceRole = async (token) => {
     await verifyToken(token, config.internalServiceSecretKey);
     return { isInternalService: true };
-};
-
-const getUserRoles = async (token) => {
-    const decoded = await verifyToken(token, config.userSecretKey);
-    const userInfo = decoded.userjwtstring ? JSON.parse(decoded.userjwtstring) : decoded;
-
-    const roles = R.pipe(
-        R.pathOr([], ['registry', 'roles']),
-        R.filter(R.propEq('applicationId', getAppId(userInfo))),
-        R.map(i => ({ name: i.name, entity: i.entity, entityId: i.entityId })),
-    )(userInfo);
-
-    return {
-        id: R.path(['id'])(userInfo),
-        firstName: R.path(['firstName'])(userInfo),
-        lastName: R.path(['lastName'])(userInfo),
-        email: R.path(['registry', 'email'])(userInfo),
-        roles,
-    };
-};
-
-// Obsolete
-// TODO: Remove
-const getRoles = (req) => {
-    const serviceToken = req.header('x-internal-service-jwt');
-    const userToken = req.header('x-user-jwt');
-    return serviceToken ? getInternalServiceRole(serviceToken) : getUserRoles(userToken);
 };
 
 const getConformIdUserInfo = async (token) => {
@@ -141,7 +105,6 @@ const authorise = (authFunc) => {
     return async (req, res, next) => {
         let result = null;
         try {
-            req.user = await getRoles(req); // TODO: Obsolete
             req.userInfo = await getUserInfo(req);
             result = authFunc(req);
         } catch (error) {
