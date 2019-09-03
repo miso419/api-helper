@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 const { expect } = require('chai');
 const { builtErrorCodes } = require('../../src/errorHandler');
-const { setup, hasRole, authorise } = require('../../src/authorisationHelper');
+const { setup, authorise } = require('../../src/authorisationHelper');
 const { assertValidationErrorObj } = require('../../src/testHelper');
 
 const testUsers = {
@@ -12,35 +12,6 @@ const testUsers = {
     SMWS_USER_JWT: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRW1haWxBZGRyZXNzIjoicy5hcmF2YW5hbi5nb3ZpbmRhcmFtYW5AZ21haWwuY29tIiwiZmlyc3ROYW1lIjoiU2FyYXYiLCJsYXN0TmFtZSI6IkdvdmluIiwiZnVsbE5hbWUiOiJTYXJhdiBHb3ZpbiIsInByZWZlcnJlZE5hbWUiOm51bGwsIm1vYmlsZU51bWJlciI6bnVsbCwiZW1haWxWZXJpZmllZE9uIjoiMjAxOS0wNi0wMyIsImlkIjoiNTUzNTdlNzAtZTYzZS00NTlkLTk2OTItNGZjOGE2MGE1NTFmIiwicmVnaXN0cnkiOnsiaWQiOiJ1c2VyLnVzLmQuOTU3IiwiZmlyc3ROYW1lIjoiU2FyYXYiLCJsYXN0TmFtZSI6IlRoaXJkUGFydHkiLCJwcmVmZXJyZWROYW1lIjpudWxsLCJkaXNwbGF5TmFtZSI6IlNhcmF2IFRoaXJkUGFydHkiLCJwaG9uZSI6bnVsbCwiZW1haWwiOiJzLmFyYXZhbmFuLmdvdmluZGFyYW1hbkBnbWFpbC5jb20iLCJhcHBsaWNhdGlvbnMiOlt7ImlkIjoiYXBwbGljYXRpb24udXMuZC4yIiwibmFtZSI6IkJ1aWx0IFdvcmtmbG93IiwibWV0YWRhdGEiOnt9LCJjcmVhdGVkQXQiOiIyMDE5LTAxLTE2VDAwOjI4OjMyLjIzNloiLCJ1cGRhdGVkQXQiOiIyMDE5LTAxLTE2VDAwOjAwOjAwLjAwMFoiLCJkYmlkIjoyfSx7ImlkIjoiYXBwbGljYXRpb24udXMuZC41IiwibmFtZSI6IlNXTVMiLCJtZXRhZGF0YSI6e30sImNyZWF0ZWRBdCI6IjIwMTktMDQtMTRUMTk6NDA6NTQuNzYwWiIsInVwZGF0ZWRBdCI6IjIwMTktMDQtMTRUMDA6MDA6MDAuMDAwWiIsImRiaWQiOjV9XSwicm9sZXMiOlt7ImlkIjoicm9sZS51cy5kLjEwIiwiYXBwbGljYXRpb25JZCI6ImFwcGxpY2F0aW9uLnVzLmQuMiIsIm5hbWUiOiJDbGllbnQgVmlld2VyIiwicGVybWlzc2lvbiI6MiwiZW50aXR5IjoiY2xpZW50IiwiZW50aXR5SWQiOiJmMTExNWU0Ni04ZjQ5LTQwNTAtYTk1My01ZTQ1Mjc1NTVhZTUiLCJjcmVhdGVkQXQiOiIyMDE5LTA0LTAyVDIyOjA2OjM5LjEwOVoiLCJ1cGRhdGVkQXQiOiIyMDE5LTA0LTAyVDAwOjAwOjAwLjAwMFoiLCJkYmlkIjoxMH0seyJpZCI6InJvbGUudXMuZC4xNCIsImFwcGxpY2F0aW9uSWQiOiJhcHBsaWNhdGlvbi51cy5kLjUiLCJuYW1lIjoiU1dNUyBVc2VyIiwicGVybWlzc2lvbiI6MiwiZW50aXR5Ijoic3dtcyIsImVudGl0eUlkIjoiNzkyNzNmMTgtZjcwNC00NjZkLWFmZGItM2NmZWU1MWMwY2YxIiwiY3JlYXRlZEF0IjoiMjAxOS0wNS0zMFQwNDo0MjozMS4zNDJaIiwidXBkYXRlZEF0IjoiMjAxOS0wNS0zMFQwMDowMDowMC4wMDBaIiwiZGJpZCI6MTR9XSwibWV0YWRhdGEiOnt9LCJjcmVhdGVkQXQiOiIyMDE5LTA0LTEwVDAwOjM5OjIyLjg5NFoiLCJ1cGRhdGVkQXQiOiIyMDE5LTA0LTEwVDAwOjAwOjAwLjAwMFoiLCJkZWxldGVkQXQiOm51bGwsImRiaWQiOjk1N30sImlhdCI6MTU1OTYwMjEwM30.PjGt9Ev2flUHk6-B0Cb_k36bf4b1bMFIEYKfgOVptlg',
 };
 
-const roles = {
-    internalService: 'internalService',
-    portalAdmin: 'portalAdmin',
-    orgAdmin: 'orgAdmin',
-};
-
-const roleData = [
-    {
-        name: roles.internalService,
-        entity: null,
-        entityId: null,
-    },
-    {
-        name: roles.portalAdmin,
-        entity: null,
-        entityId: null,
-    },
-    {
-        name: roles.orgAdmin,
-        entity: 'organisation',
-        entityId: 'test_org_id',
-    },
-    {
-        name: roles.swmsUser,
-        entity: null,
-        entityId: null,
-    },
-];
-
 setup({
     appName: 'test',
     userSecretKey: 'DXUEw51uhjXbbxdy4Qm9SPBJE88RnYLC',
@@ -49,33 +20,6 @@ setup({
 });
 
 describe('authorisationHelper', () => {
-    describe('hasRole', () => {
-        it('should return true when interal-service role exists', () => {
-            const result = hasRole(roleData, roles.internalService);
-            expect(result).to.be.true;
-        });
-
-        it('should return true when the expected role exists without entity matching', () => {
-            const result = hasRole(roleData, roles.portalAdmin);
-            expect(result).to.be.true;
-        });
-
-        it('should return false when the expected role does not exist', () => {
-            const result = hasRole(roleData, 'what user', null, null);
-            expect(result).to.be.false;
-        });
-
-        it('should return true when the expected role exists and has a matched entity ID', () => {
-            const result = hasRole(roleData, roles.orgAdmin, 'organisation', 'test_org_id');
-            expect(result).to.be.true;
-        });
-
-        it('should return false when the expected role exists but has no matched entity ID', () => {
-            const result = hasRole(roleData, roles.orgAdmin, 'organisation', 'different_id');
-            expect(result).to.be.false;
-        });
-    });
-
     describe('authorise', () => {
         const req = { header: value => (value === 'x-user-jwt' ? testUsers.PORTAL_ADMIN_JWT : null) };
         const res = {};
