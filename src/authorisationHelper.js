@@ -64,17 +64,8 @@ const getUserInfo = async (req) => {
         : getConformIdUserInfo(userToken);
 };
 
-// Obsolete
-// TODO: Remove
-const hasRole = (roleData, roleName, entity = null, entityId = null) => {
-    validateSetup();
-    return roleData && roleData.some(i => i.name === roleName
-        && i.entity === entity
-        && i.entityId === entityId);
-};
-
 const hasRoleNew = ({
-    userOrgs, appId, organisationId, roleName, entity = null, entityId = null,
+    userOrgs = [], appId, organisationId, roleName, entity = null, entityId = null,
 }) => {
     validateSetup();
 
@@ -128,7 +119,6 @@ const authorise = (authFunc) => {
 
 module.exports = {
     setup,
-    hasRole,
     hasRoleNew,
     hasInternalServiceRole,
     authorise,
