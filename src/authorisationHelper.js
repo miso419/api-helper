@@ -74,7 +74,7 @@ const hasRoleNew = ({
 
     const checkEntity = (targetEntityId, entities) => {
         if (!targetEntityId) { return true; }
-        return entities && entities.include(targetEntityId);
+        return entities && entities.includes(targetEntityId);
     };
 
     return userOrg.roles && userOrg.roles.some(i => i.applicationId === appId
