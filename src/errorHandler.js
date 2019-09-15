@@ -13,6 +13,7 @@ const builtErrorCodes = {
     ERROR_40301: '40301',
     ERROR_40302: '40302',
     ERROR_40303: '40303',
+    ERROR_40304: '40304',
     ERROR_40901: '40901',
     ERROR_42901: '42901',
 };
@@ -20,6 +21,7 @@ const builtErrorCodes = {
 const detailsRequiredErrors = [
     builtErrorCodes.ERROR_40005,
     builtErrorCodes.ERROR_40006,
+    builtErrorCodes.ERROR_40304,
     builtErrorCodes.ERROR_40901,
 ];
 
@@ -56,6 +58,9 @@ const builtErrorList = [
     },
     {
         status: 403, code: builtErrorCodes.ERROR_40303, message: 'Authorisation failed - No roles', moreInfo: null,
+    },
+    {
+        status: 403, code: builtErrorCodes.ERROR_40304, message: 'Subscription limit exeeded', moreInfo: null,
     },
     {
         status: 409, code: builtErrorCodes.ERROR_40901, message: 'Conflict', moreInfo: null,
