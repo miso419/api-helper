@@ -21,7 +21,7 @@ const getSignedUrl = async ({ bucket, options, fileId }) => {
     return url;
 };
 
-const getSignedUrlForUpload = async ({ bucket, options, fileId }) => {
+const getSignedUrlForUpload = ({ bucket, options, fileId }) => {
     const mergedOptions = {
         ...options,
         action: 'write',
@@ -30,7 +30,7 @@ const getSignedUrlForUpload = async ({ bucket, options, fileId }) => {
 };
 
 // TODO Future use
-const getSignedUrlForResumableUpload = async ({ bucket, options, fileId }) => {
+const getSignedUrlForResumableUpload = ({ bucket, options, fileId }) => {
     const mergedOptions = {
         ...options,
         action: 'resumable',
@@ -38,7 +38,7 @@ const getSignedUrlForResumableUpload = async ({ bucket, options, fileId }) => {
     return getSignedUrl({ bucket, options: mergedOptions, fileId });
 };
 
-const getSignedUrlForDownload = async ({ bucket, options, fileId }) => {
+const getSignedUrlForDownload = ({ bucket, options, fileId }) => {
     const mergedOptions = {
         ...options,
         action: 'read',
