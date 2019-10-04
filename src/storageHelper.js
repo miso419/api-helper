@@ -11,8 +11,8 @@ const getSignedUrl = async ({ bucket, options, fileId }) => {
     validationHelper.throwErrorIfFieldNotProvided(action, 'options.action');
     validationHelper.throwErrorIfFieldNotProvided(expires, 'options.expires');
     const mergedOptions = {
-        version: 'v4',
         ...options,
+        version: options.version || 'v4',
     };
     const [url] = await storage
         .bucket(bucket)
