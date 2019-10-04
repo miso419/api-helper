@@ -9,6 +9,7 @@ const { BuiltApiError, builtErrorCodes } = require('./errorHandler');
 const jwtHelper = require('./jwtHelper');
 const testHelper = require('./testHelper');
 const authorisationHelper = require('./authorisationHelper');
+const storageHelper = require('./storageHelper');
 
 module.exports = {
     AuditLog,
@@ -23,4 +24,5 @@ module.exports = {
     jwtHelper,
     testHelper,
     authorisationHelper,
+    storageHelper,
 };
