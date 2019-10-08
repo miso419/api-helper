@@ -46,9 +46,17 @@ const getSignedUrlForDownload = ({ bucket, options, fileId }) => {
     return getSignedUrl({ bucket, options: mergedOptions, fileId });
 };
 
+const checkIfFileExists = async ({ bucket, fileId }) => {
+    validationHelper.throwErrorIfFieldNotProvided(bucket, 'bucket');
+    validationHelper.throwErrorIfFieldNotProvided(fileId, 'fileId');
+    const [fileExists] = await storage.bucket(bucket).file(fileId).exists();
+    return fileExists;
+};
+
 module.exports = {
     getSignedUrl,
     getSignedUrlForUpload,
     getSignedUrlForResumableUpload,
     getSignedUrlForDownload,
+    checkIfFileExists,
 };
