@@ -1,6 +1,7 @@
 function set(req, result) {
     const requestId = req.get('X-Session-Token')
         || req.get('requestId')
+        || req.requestId
         || req.body.requestId
         || req.query.requestId;
 
