@@ -9,20 +9,23 @@ const config = {
     userSecretKey: null,
     internalServiceSecretKey: null,
     conformIdRootUrl: null,
+    masterDataRootUrl: null,
 };
 
 const setup = ({
-    appName, userSecretKey, internalServiceSecretKey, conformIdRootUrl,
+    appName, userSecretKey, internalServiceSecretKey, conformIdRootUrl, masterDataRootUrl,
 }) => {
     throwErrorIfFieldNotProvided(appName, 'appName');
     throwErrorIfFieldNotProvided(userSecretKey, 'userSecretKey');
     throwErrorIfFieldNotProvided(internalServiceSecretKey, 'internalServiceSecretKey');
     throwErrorIfFieldNotProvided(conformIdRootUrl, 'conformIdRootUrl');
+    throwErrorIfFieldNotProvided(masterDataRootUrl, 'masterDataRootUrl');
 
     config.appName = appName;
     config.userSecretKey = userSecretKey;
     config.internalServiceSecretKey = internalServiceSecretKey;
     config.conformIdRootUrl = conformIdRootUrl;
+    config.masterDataRootUrl = masterDataRootUrl;
 };
 
 const validateSetup = () => {
@@ -41,6 +44,10 @@ const getInternalServiceRole = async (token) => {
     return { isInternalService: true };
 };
 
+const getHeaders = () => ({
+    'x-internal-service-jwt': generateInternalServiceToken(),
+});
+
 const getConformIdUserInfo = async (token) => {
     const decoded = await verifyToken(token, config.userSecretKey);
     const userInfo = decoded.userjwtstring ? JSON.parse(decoded.userjwtstring) : decoded;
@@ -49,11 +56,19 @@ const getConformIdUserInfo = async (token) => {
     throwErrorIfNoObjectExists(email, 'user email');
 
     const endpoint = `${config.conformIdRootUrl}/users/${email}/roles`;
-    const { error, data } = await requestHelper.get(endpoint, null, null, true);
-    if (error) {
-        throwCustomErrorIfFalseCondition(false, error.code, error.field, error.details);
+    const { data: conformIdData } = await requestHelper.get(endpoint);
+    const orgIds = conformIdData
+        && conformIdData.userOrgs
+        && conformIdData.userOrgs.map(i => i.organisationId).join(',');
+    let orgHierarchies = null;
+    if (orgIds) {
+        const { data } = await requestHelper.get(
+            `${config.masterDataRootUrl}/organisationHierarchies?orgIds=${orgIds}`,
+            getHeaders(), false,
+        );
+        orgHierarchies = data;
     }
-    return data;
+    return { ...conformIdData, orgHierarchies };
 };
 
 const getUserInfo = async (req) => {

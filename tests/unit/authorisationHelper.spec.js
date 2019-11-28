@@ -17,6 +17,7 @@ setup({
     userSecretKey: 'DXUEw51uhjXbbxdy4Qm9SPBJE88RnYLC',
     internalServiceSecretKey: 'IkjEIlBVP92JkCFllo9JQeBQwSwiqM1q',
     conformIdRootUrl: 'http://conformid.net',
+    masterDataRootUrl: 'http://masterdata.net',
 });
 
 describe('authorisationHelper', () => {
