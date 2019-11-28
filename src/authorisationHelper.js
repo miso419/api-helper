@@ -56,17 +56,17 @@ const getConformIdUserInfo = async (token) => {
     throwErrorIfNoObjectExists(email, 'user email');
 
     const endpoint = `${config.conformIdRootUrl}/users/${email}/roles`;
-    const { data: conformIdData } = await requestHelper.get(endpoint, getHeaders(), false);
+    const { data: conformIdData } = await requestHelper.get(endpoint, null, null, true);
     const orgIds = conformIdData
         && conformIdData.userOrgs
         && conformIdData.userOrgs.map(i => i.organisationId).join(',');
     let orgHierarchies = null;
     if (orgIds) {
-        const { data } = await requestHelper.get(
+        const result = await requestHelper.get(
             `${config.masterDataRootUrl}/organisationHierarchies?orgIds=${orgIds}`,
             getHeaders(), false,
         );
-        orgHierarchies = data;
+        orgHierarchies = result.data;
     }
     return { ...conformIdData, orgHierarchies };
 };
