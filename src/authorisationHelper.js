@@ -10,10 +10,12 @@ const config = {
     internalServiceSecretKey: null,
     conformIdRootUrl: null,
     masterDataRootUrl: null,
+    useBffCerts: false,
 };
 
 const setup = ({
-    appName, userSecretKey, internalServiceSecretKey, conformIdRootUrl, masterDataRootUrl,
+    appName, userSecretKey, internalServiceSecretKey, conformIdRootUrl,
+    masterDataRootUrl, useBffCerts,
 }) => {
     throwErrorIfFieldNotProvided(appName, 'appName');
     throwErrorIfFieldNotProvided(userSecretKey, 'userSecretKey');
@@ -26,6 +28,7 @@ const setup = ({
     config.internalServiceSecretKey = internalServiceSecretKey;
     config.conformIdRootUrl = conformIdRootUrl;
     config.masterDataRootUrl = masterDataRootUrl;
+    config.useBffCerts = useBffCerts;
 };
 
 const validateSetup = () => {
@@ -56,7 +59,8 @@ const getConformIdUserInfo = async (token) => {
     throwErrorIfNoObjectExists(email, 'user email');
 
     const endpoint = `${config.conformIdRootUrl}/users/${email}/roles`;
-    const { data: conformIdData } = await requestHelper.get(endpoint, null, null, true);
+    const { data: conformIdData } = await requestHelper.get(endpoint, null, null,
+        config.useBffCerts);
     const orgIds = conformIdData
         && conformIdData.userOrgs
         && conformIdData.userOrgs.map(i => i.organisationId).join(',');
@@ -64,7 +68,7 @@ const getConformIdUserInfo = async (token) => {
     if (orgIds) {
         const result = await requestHelper.get(
             `${config.masterDataRootUrl}/organisationHierarchies?orgIds=${orgIds}`,
-            getHeaders(), false,
+            getHeaders(), false, config.useBffCerts,
         );
         orgHierarchies = result.data;
     }
