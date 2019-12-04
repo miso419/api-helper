@@ -32,10 +32,6 @@ function call(method, url, jsonBody, headers, isJsonResult = false, formData, us
     if (useBffCerts) {
         validateCerts();
     }
-    const getBffCerts = () => {
-        return useBffCerts ? { cert: config.mtlscert, key: config.mtlskey } : null;
-    };
-
     return new Promise((resolve, reject) => {
         request({
             method,
@@ -43,7 +39,7 @@ function call(method, url, jsonBody, headers, isJsonResult = false, formData, us
             headers,
             json: jsonBody,
             formData,
-            ...getBffCerts(),
+            ...(useBffCerts && { cert: config.mtlscert, key: config.mtlskey }),
         }, (error, response, body) => {
             if (error) {
                 return reject(error);
