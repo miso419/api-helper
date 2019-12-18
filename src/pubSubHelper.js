@@ -62,12 +62,16 @@ const messageHandler = (message, callback) => {
 const subscribe = (subscriptionName, successCallback, errorCallback) => {
     throwErrorIfFalse(subscriptionName, '\'subscriptionName\' is required');
     throwErrorIfFalse(successCallback, '\'successCallback\' is required');
-    throwErrorIfFalse(errorCallback, '\'errorCallback\' is required');
 
     const path = subscriptionName && `projects/${projectName}/subscriptions/${subscriptionName}`;
     const subscription = pubsub.subscription(path);
     subscription.on('message', msg => messageHandler(msg, successCallback));
-    subscription.on('error', errorCallback);
+    subscription.on('error', (err) => {
+        console.error('PubSub subscription ERROR: ', err);
+        if (errorCallback) { errorCallback(); }
+    });
+    // Register a close handler in case the subscriber closes unexpectedly
+    subscription.on('close', () => { console.error('PubSub subscription closed'); });
     subscriptions.push(subscription);
     console.info(`PubSub: ${subscriptionName} has been subscribed`);
 };
