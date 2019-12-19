@@ -53,10 +53,30 @@ const checkIfFileExists = async ({ bucket, fileId }) => {
     return fileExists;
 };
 
+const setFileMetadata = ({ bucket, fileId, metadata }) => {
+    return storage.bucket(bucket).file(fileId).setMetadata(metadata);
+};
+
+const getFileMetadata = ({ bucket, fileId }) => {
+    return storage.bucket(bucket).file(fileId).getMetadata();
+};
+
+const getFile = ({ bucket, fileId }) => {
+    return storage.bucket(bucket).file(fileId);
+};
+
+const getBucket = (bucketName) => {
+    return storage.bucket(bucketName);
+};
+
 module.exports = {
     getSignedUrl,
     getSignedUrlForUpload,
     getSignedUrlForResumableUpload,
     getSignedUrlForDownload,
     checkIfFileExists,
+    getFile,
+    getBucket,
+    setFileMetadata,
+    getFileMetadata,
 };

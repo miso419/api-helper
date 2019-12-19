@@ -15,6 +15,7 @@ const ATTR_TYPE = {
 
 const EMAILTEMPLATE_TOPIC = 'emailNotification';
 const SMS_TOPIC = 'smsNotification';
+const SIGN_UP_TOPIC = 'simpliBuildSubscription';
 
 const throwErrorIfFalse = (condition, errMsg) => {
     if (!condition) {
@@ -166,6 +167,34 @@ const sendSMS = ({
     return pubsub.topic(path).publish(dataBuffer, newAttrs);
 };
 
+const publishSignUp = ({
+    entity, action, message, requestId, metadata, gcpProjectName,
+}) => {
+    // Topic used for various sign ups - subcontract in subbie db / or swms organisation
+    // / conformid user could be any entity - will send notification only
+    // if the entity has a subscriber
+
+    throwErrorIfFalse(projectName || gcpProjectName, 'If \'setup\' function has not been invoked, \'gcpProjectName\' is required');
+    throwErrorIfFalse(entity, '\'entity\' is required');
+    throwErrorIfFalse(action, '\'action\' is required');
+    throwErrorIfFalse(message, '\'message\' is required');
+    throwErrorIfFalse(requestId, "'requestId' is required");
+    throwErrorIfFalse(metadata, "'metadata' is required");
+
+    const attr = {
+        requestId,
+        type: ATTR_TYPE.POST,
+        key: 'send.a.signupnotification',
+    };
+    const newAttrs = addGenericAttributes(attr);
+    const data = {
+        entity, action, message, metadata,
+    };
+    const path = `projects/${projectName || gcpProjectName}/topics/${SIGN_UP_TOPIC}`;
+    const dataBuffer = Buffer.from(JSON.stringify(data));
+    return pubsub.topic(path).publish(dataBuffer, newAttrs);
+};
+
 module.exports = {
     ATTR_TYPE,
     setup,
@@ -174,4 +203,5 @@ module.exports = {
     publishEmail,
     publishAuditLog,
     sendSMS,
+    publishSignUp,
 };

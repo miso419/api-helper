@@ -1,8 +1,13 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable no-restricted-syntax */
 
+const R = require('ramda');
 const { builtErrorCodes } = require('./errorHandler');
 const { throwErrorIfFieldNotProvided, throwErrorIfNoObjectExists, throwCustomErrorIfFalseCondition } = require('./validationHelper');
 const requestHelper = require('./requestHelper');
 const { createToken, verifyToken } = require('./jwtHelper');
+
+const ORG_ADMIN = 'Org Admin'; // Same across all apps
 
 const config = {
     appName: null,
@@ -10,10 +15,12 @@ const config = {
     internalServiceSecretKey: null,
     conformIdRootUrl: null,
     masterDataRootUrl: null,
+    useBffCerts: false,
 };
 
 const setup = ({
-    appName, userSecretKey, internalServiceSecretKey, conformIdRootUrl, masterDataRootUrl,
+    appName, userSecretKey, internalServiceSecretKey, conformIdRootUrl,
+    masterDataRootUrl, useBffCerts,
 }) => {
     throwErrorIfFieldNotProvided(appName, 'appName');
     throwErrorIfFieldNotProvided(userSecretKey, 'userSecretKey');
@@ -26,6 +33,7 @@ const setup = ({
     config.internalServiceSecretKey = internalServiceSecretKey;
     config.conformIdRootUrl = conformIdRootUrl;
     config.masterDataRootUrl = masterDataRootUrl;
+    config.useBffCerts = useBffCerts;
 };
 
 const validateSetup = () => {
@@ -56,7 +64,8 @@ const getConformIdUserInfo = async (token) => {
     throwErrorIfNoObjectExists(email, 'user email');
 
     const endpoint = `${config.conformIdRootUrl}/users/${email}/roles`;
-    const { data: conformIdData } = await requestHelper.get(endpoint, null, null, true);
+    const { data: conformIdData } = await requestHelper.get(endpoint, null, null,
+        config.useBffCerts);
     const orgIds = conformIdData
         && conformIdData.userOrgs
         && conformIdData.userOrgs.map(i => i.organisationId).join(',');
@@ -64,7 +73,7 @@ const getConformIdUserInfo = async (token) => {
     if (orgIds) {
         const result = await requestHelper.get(
             `${config.masterDataRootUrl}/organisationHierarchies?orgIds=${orgIds}`,
-            getHeaders(), false,
+            getHeaders(), false, config.useBffCerts,
         );
         orgHierarchies = result.data;
     }
@@ -79,7 +88,7 @@ const getUserInfo = async (req) => {
         : getConformIdUserInfo(userToken);
 };
 
-const hasRoleNew = ({
+const hasRole = ({
     userOrgs = [], appId, organisationId, roleName, entity = null, entityId = null,
 }) => {
     validateSetup();
@@ -132,10 +141,64 @@ const authorise = (authFunc) => {
     };
 };
 
+const getAppId = apps => apps && apps[config.appName] && apps[config.appName].id;
+
+const getParentOrgId = (userInfo, organisationId) => {
+    const { orgHierarchies } = userInfo;
+
+    let parentOrgId = null;
+    for (const key in orgHierarchies) {
+        if (orgHierarchies.hasOwnProperty(key)) {
+            const { childOrgs } = orgHierarchies[key];
+            if (childOrgs.some(c => c.id === organisationId)) {
+                parentOrgId = key;
+                break;
+            }
+        }
+    }
+
+    return parentOrgId;
+};
+
+const getChildOrgIds = (userInfo, organisationId) => {
+    const { orgHierarchies } = userInfo;
+
+    const childOrgs = R.path([organisationId, 'childOrgs'], orgHierarchies);
+    return childOrgs ? childOrgs.map(i => i.id) : [];
+};
+
+const isParentOrgAdmin = (userInfo, organisationId) => {
+    const { applications, userOrgs } = userInfo;
+    const appId = getAppId(applications);
+
+    const parentOrgId = getParentOrgId(userInfo, organisationId);
+    if (!parentOrgId) { return false; }
+
+    const userOrg = userOrgs.find(i => i.organisationId === parentOrgId);
+    return userOrg && userOrg.roles.some(i => i.applicationId === appId
+        && i.name === ORG_ADMIN);
+};
+
+const isOrgAdmin = (userInfo, organisationId) => {
+    const { applications, userOrgs } = userInfo;
+    const appId = getAppId(applications);
+
+    const isOrgAdminOfTarget = hasRole({
+        userOrgs, appId, organisationId, roleName: ORG_ADMIN,
+    });
+
+    return isOrgAdminOfTarget || isParentOrgAdmin(userInfo, organisationId);
+};
+
 module.exports = {
     setup,
-    hasRoleNew,
+    hasRole,
     hasInternalServiceRole,
     authorise,
     generateInternalServiceToken,
+    getAppId,
+    getParentOrgId,
+    getChildOrgIds,
+    isParentOrgAdmin,
+    isOrgAdmin,
 };
