@@ -167,6 +167,30 @@ const getChildOrgIds = (userInfo, organisationId) => {
     return childOrgs ? childOrgs.map(i => i.id) : [];
 };
 
+const getUserOrg = (userInfo, organisationId) => {
+    const { applications, userOrgs } = userInfo || {};
+    const appId = getAppId(applications);
+
+    return (userOrgs || [])
+        .find(i => i.organisationId === organisationId
+            && i.roles.some(r => r.applicationId === appId));
+};
+
+const getId = (userInfo, organisationId) => {
+    const userOrg = getUserOrg(userInfo, organisationId);
+    return R.path(['id'], userOrg)
+        || R.path(['user', 'id'], userInfo)
+        || R.path(['extUser', 'id'], userInfo);
+};
+
+const getEmail = userInfo => R.path(['user', 'userEmailAddress'], userInfo);
+
+const getDisplayName = (userInfo, organisationId) => {
+    const userOrg = getUserOrg(userInfo, organisationId);
+    const { firstName, lastName } = userOrg || R.path(['user'], userInfo) || R.path(['extUser'], userInfo);
+    return firstName ? `${firstName} ${lastName}` : null;
+};
+
 const isParentOrgAdmin = (userInfo, organisationId) => {
     const { applications, userOrgs } = userInfo;
     const appId = getAppId(applications);
@@ -199,6 +223,9 @@ module.exports = {
     getAppId,
     getParentOrgId,
     getChildOrgIds,
+    getId,
+    getEmail,
+    getDisplayName,
     isParentOrgAdmin,
     isOrgAdmin,
 };
