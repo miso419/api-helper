@@ -69,6 +69,10 @@ const getBucket = (bucketName) => {
     return storage.bucket(bucketName);
 };
 
+const makeFilePublic = ({ bucket, fileId }) => {
+    return getFile({ bucket, fileId }).makePublic();
+};
+
 module.exports = {
     getSignedUrl,
     getSignedUrlForUpload,
@@ -79,4 +83,5 @@ module.exports = {
     getBucket,
     setFileMetadata,
     getFileMetadata,
+    makeFilePublic,
 };
