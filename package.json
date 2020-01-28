@@ -1,6 +1,6 @@
 {
   "name": "@builtlabs/api-helper",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Helpers that are commonly used in microservices",
   "main": "./src/index.js",
   "license": "MIT",
@@ -27,7 +27,8 @@
     "lodash": "^4.17.11",
     "ramda": "^0.26.1",
     "redis": "^2.8.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "string": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
