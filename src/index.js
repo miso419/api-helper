@@ -1,5 +1,8 @@
+const arrayHelper = require('./arrayHelper');
 const AuditLog = require('./AuditLog');
 const cacheHelper = require('./cacheHelper');
+const cryptoHelper = require('./cryptoHelper');
+const htmlHelper = require('./htmlHelper');
 const requestHelper = require('./requestHelper');
 const responseHelper = require('./responseHelper');
 const validationHelper = require('./validationHelper');
@@ -12,8 +15,11 @@ const authorisationHelper = require('./authorisationHelper');
 const storageHelper = require('./storageHelper');
 
 module.exports = {
+    arrayHelper,
     AuditLog,
     cacheHelper,
+    cryptoHelper,
+    htmlHelper,
     requestHelper,
     responseHelper,
     validationHelper,
