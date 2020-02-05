@@ -178,15 +178,13 @@ const getUserOrg = (userInfo, organisationId) => {
 
 // Obsolete: Use getUserOrgId instead
 const getId = (userInfo, organisationId) => {
-    throwErrorIfFieldNotProvided(userInfo, 'userInfo');
-    throwErrorIfFieldNotProvided(organisationId, 'organisationId');
-
     const userOrg = getUserOrg(userInfo, organisationId);
     return R.path(['id'], userOrg)
         || R.path(['user', 'id'], userInfo)
         || R.path(['extUser', 'id'], userInfo);
 };
 
+// TODO: Consider renaming as getId
 const getUserOrgId = (userInfo, organisationId) => {
     throwErrorIfFieldNotProvided(userInfo, 'userInfo');
     throwErrorIfFieldNotProvided(organisationId, 'organisationId');
