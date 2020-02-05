@@ -176,7 +176,21 @@ const getUserOrg = (userInfo, organisationId) => {
             && i.roles.some(r => r.applicationId === appId));
 };
 
+// Obsolete: Use getUserOrgId instead
 const getId = (userInfo, organisationId) => {
+    throwErrorIfFieldNotProvided(userInfo, 'userInfo');
+    throwErrorIfFieldNotProvided(organisationId, 'organisationId');
+
+    const userOrg = getUserOrg(userInfo, organisationId);
+    return R.path(['id'], userOrg)
+        || R.path(['user', 'id'], userInfo)
+        || R.path(['extUser', 'id'], userInfo);
+};
+
+const getUserOrgId = (userInfo, organisationId) => {
+    throwErrorIfFieldNotProvided(userInfo, 'userInfo');
+    throwErrorIfFieldNotProvided(organisationId, 'organisationId');
+
     const userOrg = getUserOrg(userInfo, organisationId);
     return R.path(['id'], userOrg)
         || R.path(['user', 'id'], userInfo)
@@ -214,6 +228,17 @@ const isOrgAdmin = (userInfo, organisationId) => {
     return isOrgAdminOfTarget || isParentOrgAdmin(userInfo, organisationId);
 };
 
+const isUserMatched = (userInfo, organisationId, targetUserId) => {
+    throwErrorIfFieldNotProvided(userInfo, 'userInfo');
+    throwErrorIfFieldNotProvided(organisationId, 'organisationId');
+    throwErrorIfFieldNotProvided(targetUserId, 'targetUserId');
+
+    const userOrg = getUserOrg(userInfo, organisationId);
+    return R.path(['id'], userOrg) === targetUserId
+        || R.path(['user', 'id'], userInfo) === targetUserId
+        || R.path(['extUser', 'id'], userInfo) === targetUserId;
+};
+
 module.exports = {
     setup,
     hasRole,
@@ -224,8 +249,10 @@ module.exports = {
     getParentOrgId,
     getChildOrgIds,
     getId,
+    getUserOrgId,
     getEmail,
     getDisplayName,
     isParentOrgAdmin,
     isOrgAdmin,
+    isUserMatched,
 };
