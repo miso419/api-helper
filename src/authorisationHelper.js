@@ -109,6 +109,8 @@ const hasRole = ({
 
 const hasInternalServiceRole = userInfo => userInfo && userInfo.isInternalService;
 
+const internalOnly = req => hasInternalServiceRole(req.userInfo);
+
 const validateAuthResult = (authorised, next) => {
     throwCustomErrorIfFalseCondition(authorised, builtErrorCodes.ERROR_40301);
     return next();
@@ -250,6 +252,7 @@ module.exports = {
     getUserOrgId,
     getEmail,
     getDisplayName,
+    internalOnly,
     isParentOrgAdmin,
     isOrgAdmin,
     isUserMatched,
