@@ -230,7 +230,6 @@ const isOrgAdmin = (userInfo, organisationId) => {
 
 const isUserMatched = (userInfo, organisationId, targetUserId) => {
     throwErrorIfFieldNotProvided(userInfo, 'userInfo');
-    throwErrorIfFieldNotProvided(organisationId, 'organisationId');
     throwErrorIfFieldNotProvided(targetUserId, 'targetUserId');
 
     const userOrg = getUserOrg(userInfo, organisationId);
