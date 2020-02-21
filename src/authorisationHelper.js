@@ -143,7 +143,9 @@ const authorise = (authFunc) => {
     };
 };
 
-const getAppId = apps => apps && apps[config.appName] && apps[config.appName].id;
+const getAppId = (apps, appName = config.appName) => {
+    return apps && apps[appName] && apps[appName].id;
+};
 
 const getParentOrgId = (userInfo, organisationId) => {
     const { orgHierarchies } = userInfo;
@@ -169,9 +171,9 @@ const getChildOrgIds = (userInfo, organisationId) => {
     return childOrgs ? childOrgs.map(i => i.id) : [];
 };
 
-const getUserOrg = (userInfo, organisationId) => {
+const getUserOrg = (userInfo, organisationId, appName) => {
     const { applications, userOrgs } = userInfo || {};
-    const appId = getAppId(applications);
+    const appId = getAppId(applications, appName);
 
     return (userOrgs || [])
         .find(i => i.organisationId === organisationId
@@ -205,9 +207,9 @@ const getDisplayName = (userInfo, organisationId) => {
     return firstName ? `${firstName} ${lastName}` : null;
 };
 
-const isParentOrgAdmin = (userInfo, organisationId) => {
+const isParentOrgAdmin = (userInfo, organisationId, appName) => {
     const { applications, userOrgs } = userInfo;
-    const appId = getAppId(applications);
+    const appId = getAppId(applications, appName);
 
     const parentOrgId = getParentOrgId(userInfo, organisationId);
     if (!parentOrgId) { return false; }
@@ -217,9 +219,9 @@ const isParentOrgAdmin = (userInfo, organisationId) => {
         && i.name === ORG_ADMIN);
 };
 
-const isOrgAdmin = (userInfo, organisationId) => {
+const isOrgAdmin = (userInfo, organisationId, appName) => {
     const { applications, userOrgs } = userInfo;
-    const appId = getAppId(applications);
+    const appId = getAppId(applications, appName);
 
     const isOrgAdminOfTarget = hasRole({
         userOrgs, appId, organisationId, roleName: ORG_ADMIN,
