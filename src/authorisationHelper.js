@@ -153,9 +153,13 @@ const getParentOrgId = (userInfo, organisationId) => {
     let parentOrgId = null;
     for (const key in orgHierarchies) {
         if (orgHierarchies.hasOwnProperty(key)) {
-            const { childOrgs } = orgHierarchies[key];
+            const { childOrgs, parentOrg } = orgHierarchies[key];
             if (childOrgs.some(c => c.id === organisationId)) {
                 parentOrgId = key;
+                break;
+            }
+            if (parentOrg) {
+                parentOrgId = parentOrg.id;
                 break;
             }
         }
