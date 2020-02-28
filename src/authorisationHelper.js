@@ -158,7 +158,7 @@ const getParentOrgId = (userInfo, organisationId) => {
                 parentOrgId = key;
                 break;
             }
-            if (parentOrg) {
+            if (parentOrg && parentOrg.id) {
                 parentOrgId = parentOrg.id;
                 break;
             }
