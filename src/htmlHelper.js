@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+// NOTE: DO NOT USE underscore or unescapeHTML functions
+// https://www.npmjs.com/advisories/536
 const S = require('string');
 
 let htmlTemplates = {};
