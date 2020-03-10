@@ -2,6 +2,7 @@
 /* eslint-disable no-restricted-syntax */
 
 const R = require('ramda');
+const { hasItems } = require('./arrayHelper');
 const { builtErrorCodes } = require('./errorHandler');
 const { throwErrorIfFieldNotProvided, throwErrorIfNoObjectExists, throwCustomErrorIfFalseCondition } = require('./validationHelper');
 const requestHelper = require('./requestHelper');
@@ -55,6 +56,15 @@ const getInternalServiceRole = async (token) => {
 const getHeaders = () => ({
     'x-internal-service-jwt': generateInternalServiceToken(),
 });
+
+const checkApiError = (result) => {
+    const { error } = result;
+    if (error) {
+        throwCustomErrorIfFalseCondition(
+            false, error.code, error.field, error.details,
+        );
+    }
+};
 
 const getConformIdUserInfo = async (token) => {
     const decoded = await verifyToken(token, config.userSecretKey);
@@ -244,6 +254,69 @@ const isUserMatched = (userInfo, organisationId, targetUserId) => {
         || R.path(['extUser', 'id'], userInfo) === targetUserId;
 };
 
+const getSubscriptionsByOrgIds = async (appId, organisationIds) => {
+    const orgIds = organisationIds.join(',');
+    const endpoint = `${config.masterDataRootUrl}/subscription/plans/applications/${appId}/organisations/${orgIds}`;
+    const result = await requestHelper.get(endpoint, getHeaders());
+    checkApiError(result);
+    return result.data;
+};
+
+const getOrganisationByIds = async (organsationIds) => {
+    const endpoint = `${config.masterDataRootUrl}/organisationByIds?orgIds=${organsationIds.join()}`;
+    const result = await requestHelper.get(endpoint, getHeaders());
+    checkApiError(result);
+    return result.data;
+};
+
+const getMeProfile = async ({ userInfo, appName }) => {
+    throwErrorIfFieldNotProvided(userInfo, 'getMeProfile: userInfo');
+    throwErrorIfFieldNotProvided(appName, 'getMeProfile: appName');
+
+    const {
+        applications, userOrgs, user, orgHierarchies,
+    } = userInfo;
+    const appId = applications && applications[appName] && applications[appName].id;
+    const appUserOrgs = (userOrgs || [])
+        .filter(i => i.roles.some(r => r.applicationId === appId));
+    const hasOrganisation = hasItems(appUserOrgs);
+
+    const orgAdmin = appUserOrgs.find(i => i.roles.some(r => r.name === ORG_ADMIN));
+    const firstUserOrg = orgAdmin || (hasOrganisation && appUserOrgs[0]) || {};
+    const uniqueOrgIds = [...new Set(appUserOrgs.map(i => i.organisationId))];
+    const subscriptionsPm = hasItems(uniqueOrgIds)
+        ? getSubscriptionsByOrgIds(appId, uniqueOrgIds)
+        : Promise.resolve([]);
+    const organisationsPm = hasItems(uniqueOrgIds)
+        ? getOrganisationByIds(uniqueOrgIds)
+        : Promise.resolve([]);
+    const [subscriptions, organisations] = await Promise.all([subscriptionsPm, organisationsPm]);
+
+    return {
+        id: user.id,
+        userOrgId: firstUserOrg.id,
+        userOrgs: appUserOrgs.map(i => ({
+            id: i.id,
+            organisationId: i.organisationId,
+            parentOrgId: R.path([i.organisationId, 'parentOrg', 'id'], orgHierarchies),
+            // NOTE: One role per org and app now.
+            role: i.roles.find(({ applicationId }) => applicationId === appId).name,
+        })),
+        email: user.userEmailAddress,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        hasOrganisation,
+        subscriptions,
+        organisations: organisations.map(i => ({
+            id: i.id,
+            name: i.name,
+            preferredName: i.preferredName,
+            abn: i.abn,
+            logo: i.logo,
+        })),
+    };
+};
+
 module.exports = {
     setup,
     hasRole,
@@ -261,4 +334,5 @@ module.exports = {
     isParentOrgAdmin,
     isOrgAdmin,
     isUserMatched,
+    getMeProfile,
 };
