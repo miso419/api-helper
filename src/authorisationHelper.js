@@ -257,14 +257,14 @@ const isUserMatched = (userInfo, organisationId, targetUserId) => {
 const getSubscriptionsByOrgIds = async (appId, organisationIds) => {
     const orgIds = organisationIds.join(',');
     const endpoint = `${config.masterDataRootUrl}/subscription/plans/applications/${appId}/organisations/${orgIds}`;
-    const result = await requestHelper.get(endpoint, getHeaders());
+    const result = await requestHelper.get(endpoint, getHeaders(), false, config.useBffCerts);
     checkApiError(result);
     return result.data;
 };
 
 const getOrganisationByIds = async (organsationIds) => {
     const endpoint = `${config.masterDataRootUrl}/organisationByIds?orgIds=${organsationIds.join()}`;
-    const result = await requestHelper.get(endpoint, getHeaders());
+    const result = await requestHelper.get(endpoint, getHeaders(), false, config.useBffCerts);
     checkApiError(result);
     return result.data;
 };
