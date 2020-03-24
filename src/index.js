@@ -13,6 +13,7 @@ const jwtHelper = require('./jwtHelper');
 const testHelper = require('./testHelper');
 const authorisationHelper = require('./authorisationHelper');
 const storageHelper = require('./storageHelper');
+const textToSpeechHelper = require('./textToSpeechHelper');
 
 module.exports = {
     arrayHelper,
@@ -31,4 +32,5 @@ module.exports = {
     testHelper,
     authorisationHelper,
     storageHelper,
+    textToSpeechHelper,
 };
