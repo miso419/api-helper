@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { builtErrorCodes } = require('../../src/errorHandler');
+const { apiErrorCodes } = require('../../src/errorHandler');
 const jwtHelper = require('../../src/jwtHelper');
 const { assertValidationErrorObj } = require('../../src/testHelper');
 
@@ -27,7 +27,7 @@ describe('jwtHelper', () => {
                 .then(done, done);
         });
 
-        it('should throw an BuiltApiError when token is invalid', (done) => {
+        it('should throw an ApiError when token is invalid', (done) => {
             const token = 'sefijslgjsfljslefsflsjfslaef';
 
             jwtHelper.verifyToken(token, testSecretKey)
@@ -35,12 +35,12 @@ describe('jwtHelper', () => {
                     throw new Error('Must not called');
                 })
                 .catch((e) => {
-                    assertValidationErrorObj(e, builtErrorCodes.ERROR_40101);
+                    assertValidationErrorObj(e, apiErrorCodes.ERROR_40101);
                 })
                 .then(done, done);
         });
 
-        it('should throw an BuiltApiError when token is expired', (done) => {
+        it('should throw an ApiError when token is expired', (done) => {
             const expiresIn = '0.1s';
             const timeout = 300; // 0.3s
             const token = jwtHelper.createToken(testPayload, testSecretKey, expiresIn);
@@ -51,7 +51,7 @@ describe('jwtHelper', () => {
                         throw new Error('Must not called');
                     })
                     .catch((e) => {
-                        assertValidationErrorObj(e, builtErrorCodes.ERROR_40101);
+                        assertValidationErrorObj(e, apiErrorCodes.ERROR_40101);
                     })
                     .then(done, done);
             }, timeout);

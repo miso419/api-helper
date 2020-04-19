@@ -1,24 +1,19 @@
 {
   "env": {
-    "browser": false,
-    "node": true,
-    "mocha": true
+      "browser": false,
+      "node": true,
+      "mocha": true
   },
   "parserOptions": {
-    "ecmaVersion": 9,
-    "ecmaFeatures": {
-      "impliedStrict": true
-    }
+      "ecmaVersion": 9,
+      "ecmaFeatures": {
+          "impliedStrict": true
+      }
   },
   "extends": "airbnb-base",
   "rules": {
-    "indent": [
-      0,
-      "tab"
-    ],
-    "arrow-body-style": [
-      0,
-      "as-needed"
-    ]
+    "linebreak-style": [2, "windows"],
+    "indent": [0, "tab"],
+    "arrow-body-style": [0, "as-needed"]
   }
 }

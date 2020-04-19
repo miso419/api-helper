@@ -1,44 +1,37 @@
 {
-  "name": "@builtlabs/api-helper",
+  "name": "api-helper",
   "version": "2.9.0",
   "description": "Helpers that are commonly used in microservices",
   "main": "./src/index.js",
   "license": "MIT",
   "scripts": {
     "lint": "node ./node_modules/eslint/bin/eslint.js --ext .js, src/",
-    "test": "nyc ./node_modules/.bin/mocha tests/ --recursive",
-    "prepublishOnly": "npm run lint && npm run test"
+    "test": "nyc ./node_modules/.bin/mocha tests/ --recursive"
   },
-  "pre-commit": [
-    "lint",
-    "test"
-  ],
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org:builtlabsrepo/api-helper.git"
+    "url": "git+https://github.com/miso419/api-helper.git"
   },
   "dependencies": {
-    "@builtlabs/logger": "^1.0.3",
-    "@google-cloud/pubsub": "^1.1.2",
-    "@google-cloud/storage": "^3.3.1",
+    "@google-cloud/pubsub": "^1.7.2",
+    "@google-cloud/storage": "^4.7.0",
     "@google-cloud/text-to-speech": "^2.3.0",
     "chai": "^4.2.0",
     "deep-diff": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
-    "ramda": "^0.26.1",
-    "redis": "^2.8.0",
-    "request": "^2.88.0",
+    "ramda": "^0.27.0",
+    "redis": "^3.0.2",
+    "request": "^2.88.2",
     "string": "^3.3.3"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.17.3",
-    "mocha": "^6.1.4",
-    "nyc": "^14.1.1",
-    "pre-commit": "^1.2.2",
-    "proxyquire": "^2.1.0",
-    "superagent": "^5.0.6"
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.1",
+    "proxyquire": "^2.1.3",
+    "superagent": "^5.2.2"
   }
 }

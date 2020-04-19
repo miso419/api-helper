@@ -1,6 +1,5 @@
 const redis = require('redis');
-const logger = require('@builtlabs/logger');
-const { builtErrorCodes } = require('./errorHandler');
+const { apiErrorCodes } = require('./errorHandler');
 const validationHelper = require('./validationHelper');
 
 let client = null;
@@ -9,12 +8,12 @@ function setup(endpoint) {
     client = redis.createClient(6379, endpoint);
 
     client.on('connect', () => {
-        logger.info(`Connected to Redis! endpoint: ${endpoint}`);
+        console.info(`Connected to Redis! endpoint: ${endpoint}`);
     });
 
     // NOTE: Must listen the error event to keep running the app
     client.on('error', (err) => {
-        logger.error(`Redis Client error ${err}`);
+        console.error(`Redis Client error ${err}`);
     });
 }
 
@@ -56,7 +55,7 @@ function getExpirySeconds(expiryIn) {
     const avaiableTypes = ['d', 'h', 'm'];
     validationHelper.throwCustomErrorIfFalseCondition(
         avaiableTypes.includes(type),
-        builtErrorCodes.ERROR_40003,
+        apiErrorCodes.ERROR_40003,
         'expiryIn',
         'The last character of expiryIn must be "d", "h", or "m"',
     );
@@ -64,7 +63,7 @@ function getExpirySeconds(expiryIn) {
     const value = expiryIn.slice(0, -1);
     // Use stricter parse rule
     const numberPart = (/^(\-|\+)?([0-9]+)$/.test(value)) ? Number(value) : NaN; // eslint-disable-line
-    validationHelper.throwCustomErrorIfFalseCondition(!Number.isNaN(numberPart), builtErrorCodes.ERROR_40003, 'expiryIn');
+    validationHelper.throwCustomErrorIfFalseCondition(!Number.isNaN(numberPart), apiErrorCodes.ERROR_40003, 'expiryIn');
 
     let seconds = null;
     if (type === 'd') {
@@ -104,7 +103,7 @@ function set(key, jsonObject, expiryIn) {
 }
 
 function flushAll() {
-    validationHelper.throwCustomErrorIfFalseCondition(!hasNoConnection(), builtErrorCodes.ERROR_40005, null, 'Redis is not connected');
+    validationHelper.throwCustomErrorIfFalseCondition(!hasNoConnection(), apiErrorCodes.ERROR_40005, null, 'Redis is not connected');
 
     return new Promise((resolve, reject) => {
         return client.flushall((err, succeeded) => (err ? reject(err) : resolve(succeeded)));

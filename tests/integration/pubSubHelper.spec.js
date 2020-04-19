@@ -5,7 +5,7 @@ const KEYS = require('../../src/pubSubKeys');
 //NOTE: This integration test is disabled now due to env setup is required.
 xdescribe('pubSubHelper', () => {
     const appName = 'myApp';
-    const gcpProjectName = 'built-dev-203803';
+    const gcpProjectName = 'dev-203803';
     const topicName = 'swms-test';
     const subscriptionName = 'swms-test-sub';
 

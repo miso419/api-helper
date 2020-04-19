@@ -1,4 +1,3 @@
-// TODO: Consider moving to a private package
 const crypto = require('crypto');
 
 const IV_LENGTH = 16; // For AES, this is always 16
